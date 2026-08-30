@@ -1,539 +1,2701 @@
 <!DOCTYPE html>
-<html>
+<html lang="id">
+
 <head>
-<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+      content="width=device-width, initial-scale=1">
+
+<title>Dashboard Kehadiran - PC IAI Grobogan</title>
+
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-  
+
+
 <style>
+
+*{
+  box-sizing:border-box;
+}
+
 body{
-  font-family:'Segoe UI';
+  font-family:'Segoe UI',Arial,sans-serif;
   margin:0;
   background:#f4f6f9;
+  color:#212529;
 }
+
+
+/* =====================================================
+   HEADER
+===================================================== */
 
 .header{
-  background:linear-gradient(135deg,#0d6efd,#0dcaf0);
+
+  background:
+    linear-gradient(
+      135deg,
+      #0d6efd,
+      #0dcaf0
+    );
+
   color:white;
+
   padding:20px;
-  border-radius:0 0 20px 20px;
+
+  border-radius:
+    0 0 20px 20px;
+
   text-align:center;
+
 }
+
+.header img{
+
+  width:70px;
+
+  margin-bottom:10px;
+
+}
+
+.header h2{
+
+  margin:0;
+
+  font-size:24px;
+
+}
+
+.header p{
+
+  margin:5px 0 0;
+
+  opacity:.95;
+
+}
+
+
+/* =====================================================
+   CONTAINER
+===================================================== */
+
+.container{
+
+  max-width:1100px;
+
+  margin:auto;
+
+}
+
+
+/* =====================================================
+   CARD
+===================================================== */
 
 .card{
+
   background:white;
+
   margin:15px;
+
   padding:15px;
+
   border-radius:15px;
-  box-shadow:0 5px 15px rgba(0,0,0,0.1);
+
+  box-shadow:
+    0 5px 15px
+    rgba(0,0,0,.10);
+
 }
+
+
+/* =====================================================
+   EVENT SELECTOR
+===================================================== */
+
+.event-title{
+
+  font-size:13px;
+
+  color:#6c757d;
+
+  margin-bottom:6px;
+
+}
+
+.event-select{
+
+  width:100%;
+
+  padding:12px;
+
+  border-radius:10px;
+
+  border:1px solid #ccc;
+
+  background:white;
+
+  font-size:15px;
+
+}
+
+
+/* =====================================================
+   EVENT INFORMATION
+===================================================== */
+
+.event-info{
+
+  margin-top:12px;
+
+  padding:14px;
+
+  border-radius:12px;
+
+  background:#f8f9fa;
+
+  border:1px solid #e9ecef;
+
+}
+
+.event-info h3{
+
+  margin:
+    0 0 8px;
+
+  color:#0d6efd;
+
+}
+
+.event-row{
+
+  margin:5px 0;
+
+  color:#495057;
+
+}
+
+
+/* =====================================================
+   BADGE
+===================================================== */
+
+.badge{
+
+  display:inline-block;
+
+  padding:
+    5px 10px;
+
+  border-radius:20px;
+
+  font-size:12px;
+
+  font-weight:bold;
+
+}
+
+.badge-open{
+
+  background:#d1e7dd;
+
+  color:#198754;
+
+}
+
+.badge-closed{
+
+  background:#f8d7da;
+
+  color:#dc3545;
+
+}
+
+
+/* =====================================================
+   STATS
+===================================================== */
 
 .stats{
+
   display:grid;
-  grid-template-columns:1fr 1fr;
+
+  grid-template-columns:
+    repeat(4,1fr);
+
   gap:10px;
+
 }
 
+
 .stat{
+
   background:#f1f3f5;
-  padding:10px;
+
+  padding:15px 10px;
+
   border-radius:10px;
+
   text-align:center;
+
+}
+
+
+.stat-label{
+
+  font-size:13px;
+
+  color:#6c757d;
+
+}
+
+
+.stat-number{
+
+  display:block;
+
+  margin-top:4px;
+
+  font-size:25px;
+
+  font-weight:bold;
+
+}
+
+
+/* =====================================================
+   CHART
+===================================================== */
+
+.chart-container{
+
+  max-width:320px;
+
+  margin:auto;
+
 }
 
 canvas{
-  max-width:250px;
+
+  max-width:280px;
+
   margin:auto;
-  pointer-events:none; /* 🔥 penting */
+
+  pointer-events:none;
+
 }
-  
-input{
+
+
+/* =====================================================
+   TOOLBAR
+===================================================== */
+
+.toolbar{
+
+  display:flex;
+
+  gap:10px;
+
+  flex-wrap:wrap;
+
+  align-items:center;
+
+}
+
+
+.search-box{
+
+  flex:1;
+
+  min-width:220px;
+
+}
+
+
+input,
+select{
+
   width:100%;
+
   padding:10px;
+
   border-radius:10px;
+
   border:1px solid #ccc;
-  margin-bottom:10px;
+
+  background:white;
+
 }
 
-table{
-  width:100%;
-  border-collapse:collapse;
-}
-
-#pagination button{
-  min-width:32px;
-}
-
-#pagination button{
-  transition:0.2s;
-}
-
-#pagination span{
-  font-weight:bold;
-}
-
-#pagination button.active{
-  background:#0d6efd;
-  color:white;
-  font-weight:bold;
-}
 
 button{
+
   margin:2px;
-  padding:5px 10px;
+
+  padding:
+    8px 13px;
+
   border:none;
-  border-radius:5px;
+
+  border-radius:7px;
+
   cursor:pointer;
+
   background:#e9ecef;
+
+  transition:.2s;
+
 }
+
 
 button:hover{
+
   background:#0d6efd;
+
   color:white;
+
 }
+
+
+.btn-primary{
+
+  background:#0d6efd;
+
+  color:white;
+
+}
+
+
+.btn-success{
+
+  background:#198754;
+
+  color:white;
+
+}
+
+
+/* =====================================================
+   TABLE
+===================================================== */
+
+.table-wrapper{
+
+  width:100%;
+
+  overflow-x:auto;
+
+}
+
+
+table{
+
+  width:100%;
+
+  border-collapse:collapse;
+
+  min-width:550px;
+
+}
+
 
 th{
+
   background:#0d6efd;
+
   color:white;
+
   padding:10px;
+
 }
+
 
 td{
+
   padding:8px;
-  border-bottom:1px solid #ddd;
+
+  border-bottom:
+    1px solid #ddd;
+
 }
 
-/* Tengah */
+
 td:nth-child(1),
 td:nth-child(3),
+td:nth-child(4),
 th:nth-child(1),
-th:nth-child(3){
+th:nth-child(3),
+th:nth-child(4){
+
   text-align:center;
+
 }
 
-.status-hadir{ color:#198754; font-weight:bold; }
-.status-tidak{ color:#dc3545; font-weight:bold; }
 
-@media print {
-  table {
-    page-break-inside: auto;
+.status-hadir{
+
+  color:#198754;
+
+  font-weight:bold;
+
+}
+
+
+.status-tidak{
+
+  color:#dc3545;
+
+  font-weight:bold;
+
+}
+
+
+/* =====================================================
+   PAGINATION
+===================================================== */
+
+#pagination{
+
+  text-align:center;
+
+  margin-top:12px;
+
+}
+
+
+#pagination button{
+
+  min-width:32px;
+
+}
+
+
+#pagination button.active{
+
+  background:#0d6efd;
+
+  color:white;
+
+  font-weight:bold;
+
+}
+
+
+#pagination span{
+
+  margin:0 4px;
+
+  font-weight:bold;
+
+}
+
+
+/* =====================================================
+   LOADING
+===================================================== */
+
+.loading{
+
+  text-align:center;
+
+  padding:20px;
+
+  color:#6c757d;
+
+}
+
+
+/* =====================================================
+   ERROR
+===================================================== */
+
+.error-box{
+
+  background:#f8d7da;
+
+  color:#842029;
+
+  border-radius:10px;
+
+  padding:12px;
+
+  margin-top:10px;
+
+  display:none;
+
+}
+
+
+/* =====================================================
+   PDF
+===================================================== */
+
+#pdfContent{
+
+  display:none;
+
+  padding:20px;
+
+  font-family:Arial;
+
+}
+
+
+#pdfContent table{
+
+  width:100%;
+
+  border-collapse:collapse;
+
+}
+
+
+#pdfContent th,
+#pdfContent td{
+
+  border:1px solid #333;
+
+  padding:6px;
+
+}
+
+
+#pdfContent tr{
+
+  page-break-inside:avoid;
+
+}
+
+
+#pdfContent thead{
+
+  display:table-header-group;
+
+}
+
+
+#pdfContent tfoot{
+
+  display:table-footer-group;
+
+}
+
+
+/* =====================================================
+   RESPONSIVE
+===================================================== */
+
+@media(max-width:700px){
+
+  .stats{
+
+    grid-template-columns:
+      1fr 1fr;
+
   }
 
-  tr {
-    page-break-inside: avoid;
-    page-break-after: auto;
+  .header h2{
+
+    font-size:20px;
+
   }
 
-  thead {
-    display: table-header-group;
+  .card{
+
+    margin:10px;
+
   }
+
 }
 
-#pdfContent table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-#pdfContent th, 
-#pdfContent td {
-  border: 1px solid #333;
-  padding: 6px;
-}
-
-#pdfContent tr {
-  page-break-inside: avoid;
-}
-
-#pdfContent thead {
-  display: table-header-group;
-}
-
-#pdfContent tfoot {
-  display: table-footer-group;
-}
 </style>
+
 </head>
+
 
 <body>
 
+
+<!-- ===================================================
+     HEADER
+=================================================== -->
+
 <div class="header">
-  <img src="https://i.ibb.co.com/5WWKSY0Z/Logo-IAI-Grobogan-b.png" 
-       style="width:70px; margin-bottom:10px;">
+
+  <img
+    src="https://i.ibb.co.com/5WWKSY0Z/Logo-IAI-Grobogan-b.png"
+    alt="Logo IAI Grobogan">
+
   <h2>📊 Dashboard Kehadiran</h2>
+
+  <p>PC IAI Grobogan</p>
+
 </div>
 
+
+<div class="container">
+
+
+<!-- ===================================================
+     PILIH EVENT
+=================================================== -->
+
 <div class="card">
-  <div class="stats">
-    <div class="stat">Total<br><b id="total">0</b></div>
-    <div class="stat">Hadir<br><b id="hadir">0</b></div>
-    <div class="stat">Tidak Hadir<br><b id="tidak">0</b></div>
-    <div class="stat">Persen<br><b id="persen">0%</b></div>
+
+  <div class="event-title">
+    Pilih acara yang ingin ditampilkan
   </div>
-</div>
 
-<div class="card">
-  <canvas id="chartKehadiran"></canvas>
-</div>
+  <select
+    id="eventSelect"
+    class="event-select">
 
-<div class="card">
-<div style="display:flex; gap:10px; flex-wrap:wrap;">
+    <option value="">
+      Memuat daftar acara...
+    </option>
 
-  <input type="text" id="search" placeholder="🔍 Cari nama...">
-
-  <select id="filterStatus">
-    <option value="">Semua</option>
-    <option value="Hadir">Hadir</option>
-    <option value="Tidak Hadir">Tidak Hadir</option>
   </select>
 
-  <button onclick="exportExcel()">📥 Excel</button>
-  <button onclick="exportPDF()">📄 PDF</button>
 
-</div>
+  <div
+    id="eventInfo"
+    class="event-info"
+    style="display:none;">
 
-  <table>
-    <thead>
-      <tr>
-        <th>No</th>
-        <th>Nama</th>
-        <th>Kehadiran</th>
-      </tr>
-    </thead>
-    <tbody id="data"></tbody>
-  </table>
+    <h3 id="eventJudul">
+      -
+    </h3>
 
-  <div id="pagination" style="text-align:center; margin-top:10px;"></div>
-</div>
+    <div
+      class="event-row"
+      id="eventTanggal">
+      📅 -
+    </div>
 
-<div id="pdfContent" style="display:none; padding:20px; font-family:Arial;">
+    <div
+      class="event-row"
+      id="eventWaktu">
+      🕐 -
+    </div>
 
-  <div style="text-align:center;">
-    <img src="https://i.ibb.co/5WWKSY0Z/Logo-IAI-Grobogan-b.png" width="60">
-    <h2 style="margin:5px 0;">IKATAN APOTEKER INDONESIA</h2>
-    <h3 style="margin:0;">LAPORAN KEHADIRAN</h3>
-    <p>Dicetak: <span id="tanggalCetak"></span></p>
+    <div
+      class="event-row"
+      id="eventTempat">
+      📍 -
+    </div>
+
+    <div
+      class="event-row"
+      id="eventDeskripsi">
+      📝 -
+    </div>
+
+    <div
+      class="event-row">
+
+      Status:
+      <span id="eventStatus"
+            class="badge">
+        -
+      </span>
+
+    </div>
+
   </div>
 
-  <hr>
 
-  <p><b>Total:</b> <span id="pdfTotal"></span></p>
-  <p><b>Hadir:</b> <span id="pdfHadir"></span></p>
-  <p><b>Tidak Hadir:</b> <span id="pdfTidak"></span></p>
+  <div
+    id="errorBox"
+    class="error-box">
+  </div>
+
+</div>
+
+
+<!-- ===================================================
+     STATISTIK
+=================================================== -->
+
+<div class="card">
+
+  <div class="stats">
+
+    <div class="stat">
+
+      <span class="stat-label">
+        Total
+      </span>
+
+      <span
+        class="stat-number"
+        id="total">
+        0
+      </span>
+
+    </div>
+
+
+    <div class="stat">
+
+      <span class="stat-label">
+        Hadir
+      </span>
+
+      <span
+        class="stat-number"
+        id="hadir">
+        0
+      </span>
+
+    </div>
+
+
+    <div class="stat">
+
+      <span class="stat-label">
+        Tidak Hadir
+      </span>
+
+      <span
+        class="stat-number"
+        id="tidak">
+        0
+      </span>
+
+    </div>
+
+
+    <div class="stat">
+
+      <span class="stat-label">
+        Persentase
+      </span>
+
+      <span
+        class="stat-number"
+        id="persen">
+        0%
+      </span>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+<!-- ===================================================
+     CHART
+=================================================== -->
+
+<div class="card">
+
+  <h3 style="text-align:center;">
+    📈 Grafik Kehadiran
+  </h3>
+
+  <div class="chart-container">
+
+    <canvas
+      id="chartKehadiran">
+    </canvas>
+
+  </div>
+
+</div>
+
+
+<!-- ===================================================
+     DATA PESERTA
+=================================================== -->
+
+<div class="card">
+
+  <div class="toolbar">
+
+
+    <div class="search-box">
+
+      <input
+        type="text"
+        id="search"
+        placeholder="🔍 Cari nama...">
+
+    </div>
+
+
+    <div style="min-width:150px;">
+
+      <select id="filterStatus">
+
+        <option value="">
+          Semua
+        </option>
+
+        <option value="Hadir">
+          Hadir
+        </option>
+
+        <option value="Tidak Hadir">
+          Tidak Hadir
+        </option>
+
+      </select>
+
+    </div>
+
+
+    <button
+      class="btn-success"
+      onclick="exportExcel()">
+
+      📥 Excel
+
+    </button>
+
+
+    <button
+      class="btn-primary"
+      onclick="exportPDF()">
+
+      📄 PDF
+
+    </button>
+
+
+    <button
+      onclick="loadDashboard(currentEventId)">
+
+      🔄 Refresh
+
+    </button>
+
+
+  </div>
+
 
   <br>
 
-  <table border="1" width="100%" cellspacing="0" cellpadding="6" style="border-collapse:collapse;">
-    <thead>
-      <tr style="background:#0d6efd; color:white;">
-        <th>No</th>
-        <th>Nama</th>
-        <th>Kehadiran</th>
-      </tr>
-    </thead>
-    <tbody id="pdfTable"></tbody>
-  </table>
 
-  <div style="text-align:right; margin-top:40px;">
-    <p>Grobogan, <span id="tanggalCetak"></span></p>
-    <br><br><br>
-    <p><b>( Ketua Panitia )</b></p>
+  <div class="table-wrapper">
+
+    <table>
+
+      <thead>
+
+        <tr>
+
+          <th>No</th>
+
+          <th>Nama</th>
+
+          <th>Kehadiran</th>
+
+          <th>Tempat</th>
+
+        </tr>
+
+      </thead>
+
+      <tbody id="data">
+
+        <tr>
+
+          <td
+            colspan="4"
+            class="loading">
+
+            Silakan pilih acara
+
+          </td>
+
+        </tr>
+
+      </tbody>
+
+    </table>
+
+  </div>
+
+
+  <div id="pagination"></div>
+
 </div>
 
+
+</div>
+
+
+<!-- ===================================================
+     TEMPLATE PDF
+=================================================== -->
+
+<div
+  id="pdfContent">
+
+  <div
+    style="text-align:center;">
+
+    <img
+      src="https://i.ibb.co/5WWKSY0Z/Logo-IAI-Grobogan-b.png"
+      width="60">
+
+    <h2 style="margin:5px 0;">
+      IKATAN APOTEKER INDONESIA
+    </h2>
+
+    <h3 style="margin:0;">
+      LAPORAN KEHADIRAN
+    </h3>
+
+    <h3 id="pdfJudul">
+      -
+    </h3>
+
+    <p>
+      Dicetak:
+      <span id="tanggalCetak"></span>
+    </p>
+
+  </div>
+
+
+  <hr>
+
+
+  <p>
+    <b>Tanggal:</b>
+    <span id="pdfTanggal"></span>
+  </p>
+
+  <p>
+    <b>Waktu:</b>
+    <span id="pdfWaktu"></span>
+  </p>
+
+  <p>
+    <b>Tempat:</b>
+    <span id="pdfTempat"></span>
+  </p>
+
+
+  <p>
+    <b>Total:</b>
+    <span id="pdfTotal"></span>
+  </p>
+
+  <p>
+    <b>Hadir:</b>
+    <span id="pdfHadir"></span>
+  </p>
+
+  <p>
+    <b>Tidak Hadir:</b>
+    <span id="pdfTidak"></span>
+  </p>
+
+
+  <br>
+
+
+  <table>
+
+    <thead>
+
+      <tr>
+
+        <th>No</th>
+
+        <th>Nama</th>
+
+        <th>Kehadiran</th>
+
+        <th>Tempat</th>
+
+      </tr>
+
+    </thead>
+
+    <tbody id="pdfTable"></tbody>
+
+  </table>
+
+
+  <div
+    style="
+      text-align:right;
+      margin-top:40px;
+    ">
+
+    <p>
+      Grobogan,
+      <span id="tanggalCetak2"></span>
+    </p>
+
+    <br><br><br>
+
+    <p>
+      <b>( Ketua Panitia )</b>
+    </p>
+
+  </div>
+
+</div>
+
+
+
 <script>
-const API = "https://script.google.com/macros/s/AKfycbxgZnE5DqeQdpdyxrax5qKtevRwvPL33WBVAYzJj_19rqXZyuvmrbzKVd9xn3zE4FiR/exec";
+
+/* =====================================================
+   KONFIGURASI API
+===================================================== */
+
+const API =
+"https://script.google.com/macros/s/AKfycbzQJl6ixktTvRMz1F4rXiyEWHfAWP6O6U8divvmlH8gSD1oLBjiqlET6wq6ikI1F0XflQ/exec";
+
+
+/* =====================================================
+   VARIABLE
+===================================================== */
+
+let currentEventId = "";
+
+let currentEvent = null;
+
+let allEvents = [];
+
+let allData = [];
 
 let currentPage = 1;
+
 const rowsPerPage = 10;
-let allData = [];
+
 let chart;
 
-// 🔥 LOAD DATA AWAL
-function loadData(){
-  fetch(API)
+
+/* =====================================================
+   HELPER
+===================================================== */
+
+function escapeHTML(value){
+
+  return String(value ?? "")
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;")
+    .replace(/'/g,"&#039;");
+
+}
+
+
+/* =====================================================
+   URL EVENT
+===================================================== */
+
+function getEventFromURL(){
+
+  const params =
+    new URLSearchParams(
+      window.location.search
+    );
+
+  return (
+    params.get("event") || ""
+  );
+
+}
+
+
+function updateEventURL(id){
+
+  const url =
+    new URL(
+      window.location.href
+    );
+
+  if(id){
+
+    url.searchParams.set(
+      "event",
+      id
+    );
+
+  }else{
+
+    url.searchParams.delete(
+      "event"
+    );
+
+  }
+
+  window.history.replaceState(
+    {},
+    "",
+    url
+  );
+
+}
+
+
+/* =====================================================
+   LOAD EVENTS
+===================================================== */
+
+function loadEvents(){
+
+  const select =
+    document.getElementById(
+      "eventSelect"
+    );
+
+
+  select.innerHTML =
+    `<option value="">
+       Memuat daftar acara...
+     </option>`;
+
+
+  fetch(
+    API + "?action=events"
+  )
+
   .then(res => res.json())
+
   .then(res => {
 
-    if(!res || !res.data){
-      throw new Error("Data kosong");
+    if(
+      !res ||
+      !res.success ||
+      !Array.isArray(res.data)
+    ){
+
+      throw new Error(
+        "Daftar acara tidak tersedia."
+      );
+
     }
 
-    allData = res.data;
 
-    let s = res.summary;
+    allEvents =
+      res.data;
 
-    document.getElementById("total").innerText = s.total;
-    document.getElementById("hadir").innerText = s.hadir;
-    document.getElementById("tidak").innerText = s.tidak;
-    document.getElementById("persen").innerText = s.persen+"%";
 
-    renderChart(s.hadir, s.tidak);
-    renderTable();
+    /* ===============================================
+       SORT TANGGAL
+    =============================================== */
+
+    allEvents.sort(
+      function(a,b){
+
+        return (
+          parseTanggal(a.TANGGAL)
+          -
+          parseTanggal(b.TANGGAL)
+        );
+
+      }
+    );
+
+
+    select.innerHTML =
+      `<option value="">
+         -- Pilih Acara --
+       </option>`;
+
+
+    allEvents.forEach(
+      function(event){
+
+        const option =
+          document.createElement(
+            "option"
+          );
+
+
+        option.value =
+          event.ID_EVENT;
+
+
+        const status =
+          event.STATUS_AKTUAL ||
+          "DITUTUP";
+
+
+        option.textContent =
+          event.JUDUL +
+          " — " +
+          formatTanggal(event.TANGGAL) +
+          " [" +
+          status +
+          "]";
+
+
+        select.appendChild(
+          option
+        );
+
+      }
+    );
+
+
+    /* ===============================================
+       CEK URL ?event=
+    =============================================== */
+
+    const urlEvent =
+      getEventFromURL();
+
+
+    if(urlEvent){
+
+      const exists =
+        allEvents.some(
+          e =>
+            String(e.ID_EVENT)
+              .toUpperCase()
+            ===
+            String(urlEvent)
+              .toUpperCase()
+        );
+
+
+      if(exists){
+
+        select.value =
+          urlEvent;
+
+        loadDashboard(
+          urlEvent
+        );
+
+      }
+
+    }
+
 
   })
-  .catch(err => {
-    document.getElementById("data").innerHTML =
-      "<tr><td colspan='3'>Gagal load data ❌</td></tr>";
-    console.error(err);
-  });
+
+  .catch(
+    function(error){
+
+      console.error(error);
+
+      select.innerHTML =
+        `<option value="">
+           Gagal memuat acara
+         </option>`;
+
+      showError(
+        "Gagal memuat daftar acara."
+      );
+
+    }
+  );
+
 }
 
-// 🔥 AUTO REFRESH (REALTIME)
-setInterval(() => {
-  loadData();
-}, 10000); // 10 detik
 
-// 🔥 TABLE
+/* =====================================================
+   PARSE TANGGAL
+===================================================== */
+
+function parseTanggal(value){
+
+  if(!value){
+
+    return new Date(0);
+
+  }
+
+
+  const text =
+    String(value)
+      .trim();
+
+
+  /* DD/MM/YYYY */
+
+  let match =
+    text.match(
+      /^(\d{1,2})\/(\d{1,2})\/(\d{4})/
+    );
+
+
+  if(match){
+
+    return new Date(
+      Number(match[3]),
+      Number(match[2]) - 1,
+      Number(match[1])
+    );
+
+  }
+
+
+  /* YYYY-MM-DD */
+
+  match =
+    text.match(
+      /^(\d{4})-(\d{1,2})-(\d{1,2})/
+    );
+
+
+  if(match){
+
+    return new Date(
+      Number(match[1]),
+      Number(match[2]) - 1,
+      Number(match[3])
+    );
+
+  }
+
+
+  const parsed =
+    new Date(text);
+
+
+  return isNaN(
+    parsed.getTime()
+  )
+    ? new Date(0)
+    : parsed;
+
+}
+
+
+/* =====================================================
+   FORMAT TANGGAL
+===================================================== */
+
+function formatTanggal(value){
+
+  if(!value){
+
+    return "-";
+
+  }
+
+
+  const date =
+    parseTanggal(value);
+
+
+  if(
+    date.getTime() === 0
+  ){
+
+    return value;
+
+  }
+
+
+  return date.toLocaleDateString(
+    "id-ID",
+    {
+      day:"2-digit",
+      month:"long",
+      year:"numeric"
+    }
+  );
+
+}
+
+
+/* =====================================================
+   SELECT EVENT
+===================================================== */
+
+document
+  .getElementById(
+    "eventSelect"
+  )
+  .addEventListener(
+    "change",
+    function(){
+
+      const id =
+        this.value;
+
+
+      currentPage = 1;
+
+
+      if(!id){
+
+        currentEventId = "";
+
+        currentEvent = null;
+
+        updateEventURL("");
+
+        hideEventInfo();
+
+        resetDashboard();
+
+        return;
+
+      }
+
+
+      updateEventURL(id);
+
+      loadDashboard(id);
+
+    }
+  );
+
+
+/* =====================================================
+   LOAD DASHBOARD
+===================================================== */
+
+function loadDashboard(idEvent){
+
+  if(!idEvent){
+
+    return;
+
+  }
+
+
+  currentEventId =
+    idEvent;
+
+
+  showLoading();
+
+
+  fetch(
+    API +
+    "?action=dashboard&id_event=" +
+    encodeURIComponent(
+      idEvent
+    )
+  )
+
+  .then(res => res.json())
+
+  .then(res => {
+
+    if(
+      !res ||
+      !res.success
+    ){
+
+      throw new Error(
+        res?.message ||
+        "Dashboard tidak tersedia."
+      );
+
+    }
+
+
+    currentEvent =
+      res.event || null;
+
+
+    allData =
+      Array.isArray(res.data)
+        ? res.data
+        : [];
+
+
+    renderEventInfo(
+      currentEvent
+    );
+
+
+    const summary =
+      res.summary || {};
+
+
+    document.getElementById(
+      "total"
+    ).innerText =
+      summary.total || 0;
+
+
+    document.getElementById(
+      "hadir"
+    ).innerText =
+      summary.hadir || 0;
+
+
+    document.getElementById(
+      "tidak"
+    ).innerText =
+      summary.tidak || 0;
+
+
+    document.getElementById(
+      "persen"
+    ).innerText =
+      (summary.persen || 0) +
+      "%";
+
+
+    renderChart(
+      Number(summary.hadir || 0),
+      Number(summary.tidak || 0)
+    );
+
+
+    currentPage = 1;
+
+    renderTable();
+
+
+    hideError();
+
+  })
+
+  .catch(
+    function(error){
+
+      console.error(error);
+
+      showError(
+        error.message ||
+        "Gagal memuat dashboard."
+      );
+
+      resetDashboard();
+
+    }
+  );
+
+}
+
+
+/* =====================================================
+   EVENT INFO
+===================================================== */
+
+function renderEventInfo(event){
+
+  if(!event){
+
+    hideEventInfo();
+
+    return;
+
+  }
+
+
+  document.getElementById(
+    "eventJudul"
+  ).innerText =
+    event.JUDUL || "-";
+
+
+  document.getElementById(
+    "eventTanggal"
+  ).innerText =
+    "📅 " +
+    formatTanggal(
+      event.TANGGAL
+    );
+
+
+  const tampilWaktu =
+    String(
+      event.TAMPIL_WAKTU || "YA"
+    ).toUpperCase();
+
+
+  document.getElementById(
+    "eventWaktu"
+  ).style.display =
+    tampilWaktu === "YA"
+      ? "block"
+      : "none";
+
+
+  document.getElementById(
+    "eventWaktu"
+  ).innerText =
+    "🕐 " +
+    (
+      event.WAKTU ||
+      "-"
+    );
+
+
+  const tampilTempat =
+    String(
+      event.TAMPIL_TEMPAT || "YA"
+    ).toUpperCase();
+
+
+  document.getElementById(
+    "eventTempat"
+  ).style.display =
+    tampilTempat === "YA"
+      ? "block"
+      : "none";
+
+
+  document.getElementById(
+    "eventTempat"
+  ).innerText =
+    "📍 " +
+    (
+      event.TEMPAT ||
+      "-"
+    );
+
+
+  document.getElementById(
+    "eventDeskripsi"
+  ).innerText =
+    "📝 " +
+    (
+      event.DESKRIPSI ||
+      "-"
+    );
+
+
+  const status =
+    String(
+      event.STATUS_AKTUAL ||
+      "DITUTUP"
+    )
+    .toUpperCase();
+
+
+  const badge =
+    document.getElementById(
+      "eventStatus"
+    );
+
+
+  badge.innerText =
+    status;
+
+
+  badge.className =
+    "badge " +
+    (
+      status === "DIBUKA"
+        ? "badge-open"
+        : "badge-closed"
+    );
+
+
+  document.getElementById(
+    "eventInfo"
+  ).style.display =
+    "block";
+
+}
+
+
+/* =====================================================
+   HIDE EVENT INFO
+===================================================== */
+
+function hideEventInfo(){
+
+  document.getElementById(
+    "eventInfo"
+  ).style.display =
+    "none";
+
+}
+
+
+/* =====================================================
+   RESET DASHBOARD
+===================================================== */
+
+function resetDashboard(){
+
+  document.getElementById(
+    "total"
+  ).innerText = "0";
+
+
+  document.getElementById(
+    "hadir"
+  ).innerText = "0";
+
+
+  document.getElementById(
+    "tidak"
+  ).innerText = "0";
+
+
+  document.getElementById(
+    "persen"
+  ).innerText = "0%";
+
+
+  allData = [];
+
+
+  document.getElementById(
+    "data"
+  ).innerHTML =
+    `<tr>
+       <td colspan="4"
+           class="loading">
+         Silakan pilih acara
+       </td>
+     </tr>`;
+
+
+  document.getElementById(
+    "pagination"
+  ).innerHTML =
+    "";
+
+
+  if(chart){
+
+    chart.destroy();
+
+    chart = null;
+
+  }
+
+}
+
+
+/* =====================================================
+   LOADING
+===================================================== */
+
+function showLoading(){
+
+  document.getElementById(
+    "data"
+  ).innerHTML =
+    `<tr>
+       <td colspan="4"
+           class="loading">
+         ⏳ Memuat data...
+       </td>
+     </tr>`;
+
+}
+
+
+/* =====================================================
+   ERROR
+===================================================== */
+
+function showError(message){
+
+  const box =
+    document.getElementById(
+      "errorBox"
+    );
+
+
+  box.innerText =
+    message;
+
+
+  box.style.display =
+    "block";
+
+}
+
+
+function hideError(){
+
+  document.getElementById(
+    "errorBox"
+  ).style.display =
+    "none";
+
+}
+
+
+/* =====================================================
+   FILTER DATA
+===================================================== */
+
+function getFilteredData(){
+
+  const keyword =
+    document.getElementById(
+      "search"
+    )
+    .value
+    .toLowerCase()
+    .trim();
+
+
+  const statusFilter =
+    document.getElementById(
+      "filterStatus"
+    ).value;
+
+
+  return allData.filter(
+    function(x){
+
+      const nama =
+        String(
+          x.NAMA || ""
+        )
+        .toLowerCase();
+
+
+      const status =
+        String(
+          x.KEHADIRAN || ""
+        );
+
+
+      const cocokNama =
+        nama.includes(
+          keyword
+        );
+
+
+      const cocokStatus =
+        statusFilter
+          ? status ===
+            statusFilter
+          : true;
+
+
+      return (
+        cocokNama &&
+        cocokStatus
+      );
+
+    }
+  );
+
+}
+
+
+/* =====================================================
+   TABLE
+===================================================== */
+
 function renderTable(){
 
-  let keyword = document.getElementById("search").value.toLowerCase();
-  let statusFilter = document.getElementById("filterStatus").value;
+  const filtered =
+    getFilteredData();
 
-  let filtered = allData.filter(x => {
-    let cocokNama = x.nama.toLowerCase().includes(keyword);
-    let cocokStatus = statusFilter ? x.kehadiran === statusFilter : true;
-    return cocokNama && cocokStatus;
-  });
 
-  let totalPages = Math.ceil(filtered.length / rowsPerPage);
+  const totalPages =
+    Math.ceil(
+      filtered.length /
+      rowsPerPage
+    );
 
-  if(currentPage > totalPages) currentPage = totalPages || 1;
-  if(currentPage < 1) currentPage = 1;
 
-  let start = (currentPage - 1) * rowsPerPage;
-  let paginatedData = filtered.slice(start, start + rowsPerPage);
+  if(
+    currentPage >
+    totalPages
+  ){
+
+    currentPage =
+      totalPages || 1;
+
+  }
+
+
+  if(
+    currentPage < 1
+  ){
+
+    currentPage = 1;
+
+  }
+
+
+  const start =
+    (
+      currentPage - 1
+    ) *
+    rowsPerPage;
+
+
+  const pageData =
+    filtered.slice(
+      start,
+      start + rowsPerPage
+    );
+
 
   let html = "";
 
-  if(paginatedData.length === 0){
-    html = "<tr><td colspan='3'>Data tidak ditemukan</td></tr>";
-  } else {
-    paginatedData.forEach((d,i)=>{
-      html += `
-        <tr>
-          <td>${start + i + 1}</td>
-          <td>${d.nama}</td>
-          <td class="${d.kehadiran==='Hadir'?'status-hadir':'status-tidak'}">
-            ${d.kehadiran}
-          </td>
-        </tr>
-      `;
-    });
+
+  if(
+    pageData.length === 0
+  ){
+
+    html =
+      `<tr>
+         <td colspan="4"
+             style="text-align:center;">
+           Data tidak ditemukan
+         </td>
+       </tr>`;
+
+  }else{
+
+    pageData.forEach(
+      function(d,i){
+
+        const status =
+          String(
+            d.KEHADIRAN || ""
+          );
+
+
+        const statusClass =
+          status === "Hadir"
+            ? "status-hadir"
+            : "status-tidak";
+
+
+        html +=
+          `<tr>
+
+             <td>
+               ${start + i + 1}
+             </td>
+
+             <td>
+               ${escapeHTML(
+                 d.NAMA || "-"
+               )}
+             </td>
+
+             <td class="${statusClass}">
+               ${escapeHTML(
+                 status || "-"
+               )}
+             </td>
+
+             <td>
+               ${escapeHTML(
+                 d.TEMPAT || "-"
+               )}
+             </td>
+
+           </tr>`;
+
+      }
+    );
+
   }
 
-  document.getElementById("data").innerHTML = html;
-  renderPagination(filtered.length);
+
+  document.getElementById(
+    "data"
+  ).innerHTML =
+    html;
+
+
+  renderPagination(
+    filtered.length
+  );
+
 }
 
-// 🔥 PAGINATION
+
+/* =====================================================
+   PAGINATION
+===================================================== */
+
 function renderPagination(total){
 
-  let totalPages = Math.ceil(total / rowsPerPage);
+  const totalPages =
+    Math.ceil(
+      total /
+      rowsPerPage
+    );
+
+
   let html = "";
 
-  if(totalPages <= 1){
-    document.getElementById("pagination").innerHTML = "";
+
+  if(
+    totalPages <= 1
+  ){
+
+    document.getElementById(
+      "pagination"
+    ).innerHTML =
+      "";
+
     return;
+
   }
 
-  html += `
-    <button onclick="changePage(${currentPage-1})"
-    ${currentPage === 1 ? 'disabled' : ''}>←</button>
-  `;
 
-  let start = Math.max(1, currentPage - 2);
-  let end = Math.min(totalPages, currentPage + 2);
+  html +=
+    `<button
+       onclick="changePage(${currentPage - 1})"
+       ${currentPage === 1
+         ? "disabled"
+         : ""}>
+       ←
+     </button>`;
+
+
+  const start =
+    Math.max(
+      1,
+      currentPage - 2
+    );
+
+
+  const end =
+    Math.min(
+      totalPages,
+      currentPage + 2
+    );
+
 
   if(start > 1){
-    html += `<button onclick="changePage(1)">1</button>`;
+
+    html +=
+      `<button
+         onclick="changePage(1)">
+         1
+       </button>`;
+
+
     if(start > 2){
-      html += `<span>...</span>`;
+
+      html +=
+        `<span>...</span>`;
+
     }
+
   }
 
-  for(let i = start; i <= end; i++){
-    html += `
-      <button 
-        onclick="changePage(${i})"
-        class="${i === currentPage ? 'active' : ''}">
-        ${i}
-      </button>
-    `;
+
+  for(
+    let i = start;
+    i <= end;
+    i++
+  ){
+
+    html +=
+      `<button
+         onclick="changePage(${i})"
+         class="${
+           i === currentPage
+             ? "active"
+             : ""
+         }">
+         ${i}
+       </button>`;
+
   }
 
-  if(end < totalPages){
-    if(end < totalPages - 1){
-      html += `<span>...</span>`;
+
+  if(
+    end < totalPages
+  ){
+
+    if(
+      end <
+      totalPages - 1
+    ){
+
+      html +=
+        `<span>...</span>`;
+
     }
-    html += `<button onclick="changePage(${totalPages})">${totalPages}</button>`;
+
+
+    html +=
+      `<button
+         onclick="changePage(${totalPages})">
+         ${totalPages}
+       </button>`;
+
   }
 
-  html += `
-    <button onclick="changePage(${currentPage+1})"
-    ${currentPage === totalPages ? 'disabled' : ''}>→</button>
-  `;
 
-  document.getElementById("pagination").innerHTML = html;
+  html +=
+    `<button
+       onclick="changePage(${currentPage + 1})"
+       ${
+         currentPage === totalPages
+           ? "disabled"
+           : ""
+       }>
+       →
+     </button>`;
+
+
+  document.getElementById(
+    "pagination"
+  ).innerHTML =
+    html;
+
 }
 
-// 🔥 CHANGE PAGE (FIX FINAL)
-function changePage(p){
 
-  let keyword = document.getElementById("search").value.toLowerCase();
-  let statusFilter = document.getElementById("filterStatus").value;
+/* =====================================================
+   CHANGE PAGE
+===================================================== */
 
-  let filtered = allData.filter(x => {
-    let cocokNama = x.nama.toLowerCase().includes(keyword);
-    let cocokStatus = statusFilter ? x.kehadiran === statusFilter : true;
-    return cocokNama && cocokStatus;
+function changePage(page){
+
+  const totalPages =
+    Math.ceil(
+      getFilteredData().length /
+      rowsPerPage
+    );
+
+
+  if(
+    page < 1 ||
+    page > totalPages
+  ){
+
+    return;
+
+  }
+
+
+  currentPage =
+    page;
+
+
+  renderTable();
+
+
+  window.scrollTo({
+
+    top:400,
+
+    behavior:"smooth"
+
   });
 
-  let totalPages = Math.ceil(filtered.length / rowsPerPage);
-
-  if(p < 1 || p > totalPages) return;
-
-  currentPage = p;
-  renderTable();
-
-  window.scrollTo({ top: 400, behavior: "smooth" });
 }
 
-// 🔥 SEARCH
-document.getElementById("search").addEventListener("input", ()=>{
-  currentPage = 1;
-  renderTable();
-});
 
-// 🔥 FILTER
-document.getElementById("filterStatus").addEventListener("change", ()=>{
-  currentPage = 1;
-  renderTable();
-});
+/* =====================================================
+   SEARCH
+===================================================== */
 
-// 🔥 CHART
-function renderChart(hadir, tidak){
-  const ctx = document.getElementById('chartKehadiran');
+document.getElementById(
+  "search"
+)
+.addEventListener(
+  "input",
+  function(){
 
-  if(chart) chart.destroy();
+    currentPage = 1;
 
-  chart = new Chart(ctx, {
-    type: 'doughnut',
-    data: {
-      labels: ['Hadir','Tidak Hadir'],
-      datasets: [{
-        data: [hadir, tidak],
-        backgroundColor: ['#198754','#dc3545']
-      }]
+    renderTable();
+
+  }
+);
+
+
+/* =====================================================
+   FILTER
+===================================================== */
+
+document.getElementById(
+  "filterStatus"
+)
+.addEventListener(
+  "change",
+  function(){
+
+    currentPage = 1;
+
+    renderTable();
+
+  }
+);
+
+
+/* =====================================================
+   CHART
+===================================================== */
+
+function renderChart(
+  hadir,
+  tidak
+){
+
+  const ctx =
+    document.getElementById(
+      "chartKehadiran"
+    );
+
+
+  if(chart){
+
+    chart.destroy();
+
+  }
+
+
+  chart =
+    new Chart(
+      ctx,
+      {
+
+        type:"doughnut",
+
+        data:{
+
+          labels:[
+            "Hadir",
+            "Tidak Hadir"
+          ],
+
+          datasets:[{
+
+            data:[
+              hadir,
+              tidak
+            ],
+
+            backgroundColor:[
+              "#198754",
+              "#dc3545"
+            ]
+
+          }]
+
+        },
+
+        options:{
+
+          responsive:true,
+
+          plugins:{
+
+            legend:{
+
+              position:"bottom"
+
+            }
+
+          }
+
+        }
+
+      }
+    );
+
+}
+
+
+/* =====================================================
+   AUTO REFRESH
+   10 DETIK
+===================================================== */
+
+setInterval(
+  function(){
+
+    if(currentEventId){
+
+      loadDashboard(
+        currentEventId
+      );
+
     }
-  });
-}
 
-// 🔥 LOAD AWAL
-loadData();
+  },
+  10000
+);
+
+
+/* =====================================================
+   EXPORT EXCEL
+===================================================== */
 
 function exportExcel(){
 
-  let keyword = document.getElementById("search").value.toLowerCase();
-  let statusFilter = document.getElementById("filterStatus").value;
+  if(
+    !currentEvent
+  ){
 
-  let filtered = allData.filter(x => {
-    let cocokNama = x.nama.toLowerCase().includes(keyword);
-    let cocokStatus = statusFilter ? x.kehadiran === statusFilter : true;
-    return cocokNama && cocokStatus;
-  });
+    alert(
+      "Silakan pilih acara terlebih dahulu."
+    );
 
-  let html = `
-    <table border="1">
-      <tr>
-        <th style="background:#0d6efd;color:white;">No</th>
-        <th style="background:#0d6efd;color:white;">Nama</th>
-        <th style="background:#0d6efd;color:white;">Kehadiran</th>
-      </tr>
-  `;
+    return;
 
-  filtered.forEach((d,i)=>{
-    html += `
-      <tr>
-        <td>${i+1}</td>
-        <td>${d.nama}</td>
-        <td style="color:${d.kehadiran==='Hadir'?'green':'red'}">${d.kehadiran}</td>
-      </tr>
-    `;
-  });
+  }
 
-  html += `</table>`;
 
-  let blob = new Blob([html], { type: 'application/vnd.ms-excel' });
+  const filtered =
+    getFilteredData();
 
-  let link = document.createElement("a");
-  link.href = URL.createObjectURL(blob);
-  link.download = "data_kehadiran.xls";
+
+  let html =
+    `<table border="1">
+
+       <tr>
+
+         <th
+           style="
+             background:#0d6efd;
+             color:white;">
+           No
+         </th>
+
+         <th
+           style="
+             background:#0d6efd;
+             color:white;">
+           Nama
+         </th>
+
+         <th
+           style="
+             background:#0d6efd;
+             color:white;">
+           Kehadiran
+         </th>
+
+         <th
+           style="
+             background:#0d6efd;
+             color:white;">
+           Tempat
+         </th>
+
+       </tr>`;
+
+
+  filtered.forEach(
+    function(d,i){
+
+      html +=
+        `<tr>
+
+           <td>
+             ${i + 1}
+           </td>
+
+           <td>
+             ${escapeHTML(
+               d.NAMA || ""
+             )}
+           </td>
+
+           <td>
+             ${escapeHTML(
+               d.KEHADIRAN || ""
+             )}
+           </td>
+
+           <td>
+             ${escapeHTML(
+               d.TEMPAT || ""
+             )}
+           </td>
+
+         </tr>`;
+
+    }
+  );
+
+
+  html +=
+    "</table>";
+
+
+  const blob =
+    new Blob(
+      [html],
+      {
+        type:
+          "application/vnd.ms-excel"
+      }
+    );
+
+
+  const link =
+    document.createElement(
+      "a"
+    );
+
+
+  link.href =
+    URL.createObjectURL(
+      blob
+    );
+
+
+  link.download =
+    "kehadiran_" +
+    (
+      currentEvent.ID_EVENT ||
+      "event"
+    ) +
+    ".xls";
+
+
   link.click();
+
 }
+
+
+/* =====================================================
+   EXPORT PDF
+===================================================== */
 
 function exportPDF(){
 
-  let keyword = document.getElementById("search").value.toLowerCase();
-  let statusFilter = document.getElementById("filterStatus").value;
+  if(
+    !currentEvent
+  ){
 
-  let filtered = allData.filter(x => {
-    let cocokNama = x.nama.toLowerCase().includes(keyword);
-    let cocokStatus = statusFilter ? x.kehadiran === statusFilter : true;
-    return cocokNama && cocokStatus;
-  });
+    alert(
+      "Silakan pilih acara terlebih dahulu."
+    );
 
-  let now = new Date().toLocaleDateString("id-ID");
+    return;
 
-  document.querySelectorAll("#tanggalCetak").forEach(el=>{
-    el.innerText = now;
-  });
+  }
 
-  document.getElementById("pdfTotal").innerText = filtered.length;
-  document.getElementById("pdfHadir").innerText = filtered.filter(x=>x.kehadiran==="Hadir").length;
-  document.getElementById("pdfTidak").innerText = filtered.filter(x=>x.kehadiran==="Tidak Hadir").length;
+
+  const filtered =
+    getFilteredData();
+
+
+  const now =
+    new Date()
+      .toLocaleDateString(
+        "id-ID"
+      );
+
+
+  document.getElementById(
+    "tanggalCetak"
+  ).innerText =
+    now;
+
+
+  document.getElementById(
+    "tanggalCetak2"
+  ).innerText =
+    now;
+
+
+  document.getElementById(
+    "pdfJudul"
+  ).innerText =
+    currentEvent.JUDUL ||
+    "-";
+
+
+  document.getElementById(
+    "pdfTanggal"
+  ).innerText =
+    formatTanggal(
+      currentEvent.TANGGAL
+    );
+
+
+  document.getElementById(
+    "pdfWaktu"
+  ).innerText =
+    currentEvent.WAKTU ||
+    "-";
+
+
+  document.getElementById(
+    "pdfTempat"
+  ).innerText =
+    currentEvent.TEMPAT ||
+    "-";
+
+
+  document.getElementById(
+    "pdfTotal"
+  ).innerText =
+    filtered.length;
+
+
+  document.getElementById(
+    "pdfHadir"
+  ).innerText =
+    filtered.filter(
+      x =>
+        x.KEHADIRAN ===
+        "Hadir"
+    ).length;
+
+
+  document.getElementById(
+    "pdfTidak"
+  ).innerText =
+    filtered.filter(
+      x =>
+        x.KEHADIRAN ===
+        "Tidak Hadir"
+    ).length;
+
 
   let html = "";
 
-  filtered.forEach((d,i)=>{
-    html += `
-      <tr>
-        <td style="text-align:center;">${i+1}</td>
-        <td>${d.nama}</td>
-        <td style="text-align:center; color:${d.kehadiran==='Hadir'?'green':'red'};">
-          ${d.kehadiran}
-        </td>
-      </tr>
-    `;
-  });
 
-  document.getElementById("pdfTable").innerHTML = html;
+  filtered.forEach(
+    function(d,i){
 
-  let element = document.getElementById("pdfContent");
-  element.style.display = "block";
+      html +=
+        `<tr>
 
-  html2pdf().set({
-    margin: [5,10,10,10], // 🔥 atas kecil biar tidak kosong
-    filename: 'laporan_kehadiran.pdf',
-    image: { type: 'jpeg', quality: 1 },
-    html2canvas: { 
-      scale: 2,
-      useCORS: true,
-      scrollY: 0
-    },
-    jsPDF: { 
-      unit: 'mm', 
-      format: 'a4', 
-      orientation: 'portrait' 
-    },
-    pagebreak: { mode: ['css', 'legacy'] } // 🔥 WAJIB
-  })
-  .from(element)
-  .save()
-  .then(()=>{
-    element.style.display = "none";
-  });
+           <td
+             style="text-align:center;">
+             ${i + 1}
+           </td>
+
+           <td>
+             ${escapeHTML(
+               d.NAMA || ""
+             )}
+           </td>
+
+           <td
+             style="
+               text-align:center;
+               color:${
+                 d.KEHADIRAN ===
+                 "Hadir"
+                   ? "green"
+                   : "red"
+               };
+             ">
+
+             ${escapeHTML(
+               d.KEHADIRAN || ""
+             )}
+
+           </td>
+
+           <td>
+             ${escapeHTML(
+               d.TEMPAT || ""
+             )}
+           </td>
+
+         </tr>`;
+
+    }
+  );
+
+
+  document.getElementById(
+    "pdfTable"
+  ).innerHTML =
+    html;
+
+
+  const element =
+    document.getElementById(
+      "pdfContent"
+    );
+
+
+  element.style.display =
+    "block";
+
+
+  html2pdf()
+
+    .set({
+
+      margin:[
+        5,
+        10,
+        10,
+        10
+      ],
+
+      filename:
+        "laporan_kehadiran_" +
+        (
+          currentEvent.ID_EVENT ||
+          "event"
+        ) +
+        ".pdf",
+
+      image:{
+
+        type:"jpeg",
+
+        quality:1
+
+      },
+
+      html2canvas:{
+
+        scale:2,
+
+        useCORS:true,
+
+        scrollY:0
+
+      },
+
+      jsPDF:{
+
+        unit:"mm",
+
+        format:"a4",
+
+        orientation:"portrait"
+
+      },
+
+      pagebreak:{
+
+        mode:[
+          "css",
+          "legacy"
+        ]
+
+      }
+
+    })
+
+    .from(element)
+
+    .save()
+
+    .then(
+      function(){
+
+        element.style.display =
+          "none";
+
+      }
+    );
 
 }
+
+
+/* =====================================================
+   LOAD AWAL
+===================================================== */
+
+loadEvents();
+
 </script>
-  
+
+
 </body>
+
 </html>
