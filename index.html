@@ -8,7 +8,7 @@
 <meta name="viewport"
       content="width=device-width, initial-scale=1">
 
-<title>Dashboard Kehadiran - PC IAI Grobogan</title>
+<title>Dashboard Kegiatan - PC IAI Grobogan</title>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
@@ -141,6 +141,709 @@ body{
   font-size:15px;
 
 }
+
+
+/* =====================================================
+   MODE DASHBOARD
+===================================================== */
+
+.mode-title{
+
+  font-size:13px;
+
+  color:#6c757d;
+
+  margin-top:14px;
+
+  margin-bottom:7px;
+
+}
+
+.mode-switch{
+
+  display:grid;
+
+  grid-template-columns:repeat(3,1fr);
+
+  gap:8px;
+
+}
+
+.mode-btn{
+
+  margin:0;
+
+  padding:11px 10px;
+
+  border:1px solid #dee2e6;
+
+  border-radius:10px;
+
+  background:#f8f9fa;
+
+  color:#495057;
+
+  font-weight:600;
+
+  font-size:14px;
+
+}
+
+.mode-btn:hover{
+
+  background:#e9ecef;
+
+  color:#212529;
+
+}
+
+.mode-btn.active{
+
+  background:#0d6efd;
+
+  color:white;
+
+  border-color:#0d6efd;
+
+}
+
+.mode-description{
+
+  margin-top:8px;
+
+  font-size:12px;
+
+  color:#6c757d;
+
+}
+
+@media(max-width:700px){
+
+  .mode-switch{
+
+    grid-template-columns:1fr;
+
+  }
+
+}
+
+/* =====================================================
+   MODE DASHBOARD
+===================================================== */
+
+function setMode(mode){
+
+  currentMode =
+    mode;
+
+
+  document
+    .querySelectorAll(".mode-btn")
+    .forEach(
+      function(button){
+
+        button.classList.remove(
+          "active"
+        );
+
+      }
+    );
+
+
+  const activeButton =
+    document.getElementById(
+      mode === "polling"
+        ? "modePolling"
+        : mode === "pendaftaran"
+          ? "modePendaftaran"
+          : "modeAbsensi"
+    );
+
+
+  if(activeButton){
+
+    activeButton.classList.add(
+      "active"
+    );
+
+  }
+
+
+  const description =
+    document.getElementById(
+      "modeDescription"
+    );
+
+
+  if(mode === "polling"){
+
+    description.innerText =
+      "Rekap konfirmasi kehadiran dari hasil polling.";
+
+  }
+
+  else if(mode === "pendaftaran"){
+
+    description.innerText =
+      "Daftar peserta resmi yang sudah melakukan pendaftaran.";
+
+  }
+
+  else{
+
+    description.innerText =
+      "Daftar peserta yang siap digunakan untuk proses absensi.";
+
+  }
+
+
+  updateModeInterface();
+
+
+  if(currentEventId){
+
+    currentPage = 1;
+
+    loadDashboard(
+      currentEventId
+    );
+
+  }
+
+}
+
+
+function updateModeInterface(){
+
+  const filter =
+    document.getElementById(
+      "filterStatus"
+    );
+
+  const search =
+    document.getElementById(
+      "search"
+    );
+
+  const exportExcelButton =
+    document.querySelector(
+      ".btn-success"
+    );
+
+  const exportPDFButton =
+    document.querySelector(
+      ".btn-primary"
+    );
+
+  const chartCard =
+    document.getElementById(
+      "chartCard"
+    );
+
+  const chartTitle =
+    document.getElementById(
+      "chartTitle"
+    );
+
+
+  if(currentMode === "polling"){
+
+    search.placeholder =
+      "🔍 Cari nama...";
+
+    filter.innerHTML =
+      `<option value="">Semua</option>
+       <option value="Hadir">Hadir</option>
+       <option value="Tidak Hadir">Tidak Hadir</option>`;
+
+    if(exportExcelButton){
+
+      exportExcelButton.style.display =
+        "inline-block";
+
+    }
+
+    if(exportPDFButton){
+
+      exportPDFButton.style.display =
+        "inline-block";
+
+    }
+
+    if(chartCard){
+
+      chartCard.style.display =
+        "block";
+
+    }
+
+    if(chartTitle){
+
+      chartTitle.innerText =
+        "📈 Grafik Kehadiran";
+
+    }
+
+    return;
+
+  }
+
+
+  if(currentMode === "pendaftaran"){
+
+    search.placeholder =
+      "🔍 Cari nama / instansi...";
+
+    filter.innerHTML =
+      `<option value="">Semua Status</option>
+       <option value="TERDAFTAR">Terdaftar</option>`;
+
+    if(exportExcelButton){
+
+      exportExcelButton.style.display =
+        "inline-block";
+
+    }
+
+    if(exportPDFButton){
+
+      exportPDFButton.style.display =
+        "inline-block";
+
+    }
+
+    if(chartCard){
+
+      chartCard.style.display =
+        "none";
+
+    }
+
+    return;
+
+  }
+
+
+  /* ABSENSI */
+
+  search.placeholder =
+    "🔍 Cari nama...";
+
+  filter.innerHTML =
+    `<option value="">Semua</option>
+     <option value="Hadir">Hadir</option>`;
+
+  if(exportExcelButton){
+
+    exportExcelButton.style.display =
+      "inline-block";
+
+  }
+
+  if(exportPDFButton){
+
+    exportPDFButton.style.display =
+      "inline-block";
+
+  }
+
+  if(chartCard){
+
+    chartCard.style.display =
+      "none";
+
+  }
+
+}
+
+
+function setPollingStats(summary){
+
+  setStatLabel(
+    "statLabelTotal",
+    "Total"
+  );
+
+  setStatLabel(
+    "statLabelHadir",
+    "Hadir"
+  );
+
+  setStatLabel(
+    "statLabelTidak",
+    "Tidak Hadir"
+  );
+
+  setStatLabel(
+    "statLabelPersen",
+    "Persentase"
+  );
+
+
+  setStatNumber(
+    "total",
+    summary.total || 0
+  );
+
+  setStatNumber(
+    "hadir",
+    summary.hadir || 0
+  );
+
+  setStatNumber(
+    "tidak",
+    summary.tidak || 0
+  );
+
+  setStatNumber(
+    "persen",
+    (summary.persen || 0) + "%"
+  );
+
+
+  renderChart(
+    Number(summary.hadir || 0),
+    Number(summary.tidak || 0)
+  );
+
+}
+
+
+function loadPendaftaranDashboard(idEvent){
+
+  showLoading();
+
+
+  fetch(
+    API +
+    "?action=pendaftaran&id_event=" +
+    encodeURIComponent(
+      idEvent
+    )
+  )
+
+  .then(res => res.json())
+
+  .then(configResult => {
+
+    if(
+      !configResult ||
+      !configResult.success
+    ){
+
+      throw new Error(
+        configResult?.message ||
+        "Konfigurasi pendaftaran tidak tersedia."
+      );
+
+    }
+
+
+    currentEvent =
+      configResult.event || null;
+
+
+    renderEventInfo(
+      currentEvent
+    );
+
+
+    return fetch(
+      API +
+      "?action=peserta_terdaftar&id_event=" +
+      encodeURIComponent(
+        idEvent
+      )
+    );
+
+  })
+
+  .then(res => res.json())
+
+  .then(res => {
+
+    if(
+      !res ||
+      !res.success
+    ){
+
+      throw new Error(
+        res?.message ||
+        "Data pendaftaran tidak tersedia."
+      );
+
+    }
+
+
+    allData =
+      Array.isArray(res.data)
+        ? res.data
+        : [];
+
+
+    const total =
+      allData.length;
+
+
+    const terdaftar =
+      allData.filter(
+        function(item){
+
+          return String(
+            item.STATUS_PENDAFTARAN || ""
+          )
+            .trim()
+            .toUpperCase()
+            === "TERDAFTAR";
+
+        }
+      ).length;
+
+
+    const lainnya =
+      total - terdaftar;
+
+
+    const persen =
+      total > 0
+        ? Number(
+            (
+              terdaftar /
+              total
+            ) * 100
+          ).toFixed(2)
+        : 0;
+
+
+    setStatLabel(
+      "statLabelTotal",
+      "Total Pendaftar"
+    );
+
+    setStatLabel(
+      "statLabelHadir",
+      "Terdaftar"
+    );
+
+    setStatLabel(
+      "statLabelTidak",
+      "Status Lain"
+    );
+
+    setStatLabel(
+      "statLabelPersen",
+      "Persentase"
+    );
+
+
+    setStatNumber(
+      "total",
+      total
+    );
+
+    setStatNumber(
+      "hadir",
+      terdaftar
+    );
+
+    setStatNumber(
+      "tidak",
+      lainnya
+    );
+
+    setStatNumber(
+      "persen",
+      persen + "%"
+    );
+
+
+    currentPage = 1;
+
+    renderTable();
+
+    hideError();
+
+  })
+
+  .catch(
+    function(error){
+
+      console.error(error);
+
+      showError(
+        error.message ||
+        "Gagal memuat data pendaftaran."
+      );
+
+      resetDashboard();
+
+    }
+  );
+
+}
+
+
+function loadAbsensiDashboard(idEvent){
+
+  showLoading();
+
+
+  /*
+   * Endpoint ini adalah endpoint yang sudah ada
+   * pada Code.gs saat ini.
+   *
+   * Sumber datanya:
+   * RESPON dengan KEHADIRAN = Hadir.
+   *
+   * Data ini merupakan daftar peserta yang
+   * siap digunakan oleh proses absensi.
+   */
+
+  fetch(
+    API +
+    "?action=peserta_absensi&id_event=" +
+    encodeURIComponent(
+      idEvent
+    )
+  )
+
+  .then(res => res.json())
+
+  .then(res => {
+
+    if(
+      !res ||
+      !res.success
+    ){
+
+      throw new Error(
+        res?.message ||
+        "Data peserta absensi tidak tersedia."
+      );
+
+    }
+
+
+    currentEvent =
+      res.event || currentEvent;
+
+
+    renderEventInfo(
+      currentEvent
+    );
+
+
+    allData =
+      Array.isArray(res.data)
+        ? res.data
+        : [];
+
+
+    setStatLabel(
+      "statLabelTotal",
+      "Peserta"
+    );
+
+    setStatLabel(
+      "statLabelHadir",
+      "Siap Absensi"
+    );
+
+    setStatLabel(
+      "statLabelTidak",
+      "Status"
+    );
+
+    setStatLabel(
+      "statLabelPersen",
+      "Kesiapan"
+    );
+
+
+    setStatNumber(
+      "total",
+      allData.length
+    );
+
+    setStatNumber(
+      "hadir",
+      allData.length
+    );
+
+    setStatNumber(
+      "tidak",
+      0
+    );
+
+    setStatNumber(
+      "persen",
+      allData.length > 0
+        ? "100%"
+        : "0%"
+    );
+
+
+    currentPage = 1;
+
+    renderTable();
+
+    hideError();
+
+  })
+
+  .catch(
+    function(error){
+
+      console.error(error);
+
+      showError(
+        error.message ||
+        "Gagal memuat data peserta absensi."
+      );
+
+      resetDashboard();
+
+    }
+  );
+
+}
+
+
+function setStatLabel(id, value){
+
+  const element =
+    document.getElementById(
+      id
+    );
+
+  if(element){
+
+    element.innerText =
+      value;
+
+  }
+
+}
+
+
+function setStatNumber(id, value){
+
+  const element =
+    document.getElementById(
+      id
+    );
+
+  if(element){
+
+    element.innerText =
+      value;
+
+  }
+
+}
+
+
+
 
 
 /* =====================================================
@@ -629,7 +1332,7 @@ th:nth-child(4){
     src="https://i.ibb.co.com/5WWKSY0Z/Logo-IAI-Grobogan-b.png"
     alt="Logo IAI Grobogan">
 
-  <h2>📊 Dashboard Kehadiran</h2>
+  <h2>📊 Dashboard Kegiatan</h2>
 
   <p>PC IAI Grobogan</p>
 
@@ -658,6 +1361,44 @@ th:nth-child(4){
     </option>
 
   </select>
+
+  <div class="mode-title">
+    Tampilkan data
+  </div>
+
+  <div class="mode-switch">
+
+    <button
+      type="button"
+      id="modePolling"
+      class="mode-btn active"
+      onclick="setMode('polling')">
+      📊 Polling
+    </button>
+
+    <button
+      type="button"
+      id="modePendaftaran"
+      class="mode-btn"
+      onclick="setMode('pendaftaran')">
+      📝 Pendaftaran
+    </button>
+
+    <button
+      type="button"
+      id="modeAbsensi"
+      class="mode-btn"
+      onclick="setMode('absensi')">
+      🟢 Absensi
+    </button>
+
+  </div>
+
+  <div
+    id="modeDescription"
+    class="mode-description">
+    Rekap konfirmasi kehadiran dari hasil polling.
+  </div>
 
 
   <div
@@ -725,7 +1466,7 @@ th:nth-child(4){
 
     <div class="stat">
 
-      <span class="stat-label">
+      <span class="stat-label" id="statLabelTotal">
         Total
       </span>
 
@@ -740,7 +1481,7 @@ th:nth-child(4){
 
     <div class="stat">
 
-      <span class="stat-label">
+      <span class="stat-label" id="statLabelHadir">
         Hadir
       </span>
 
@@ -755,7 +1496,7 @@ th:nth-child(4){
 
     <div class="stat">
 
-      <span class="stat-label">
+      <span class="stat-label" id="statLabelTidak">
         Tidak Hadir
       </span>
 
@@ -770,7 +1511,7 @@ th:nth-child(4){
 
     <div class="stat">
 
-      <span class="stat-label">
+      <span class="stat-label" id="statLabelPersen">
         Persentase
       </span>
 
@@ -791,9 +1532,9 @@ th:nth-child(4){
      CHART
 =================================================== -->
 
-<div class="card">
+<div class="card" id="chartCard">
 
-  <h3 style="text-align:center;">
+  <h3 style="text-align:center;" id="chartTitle">
     📈 Grafik Kehadiran
   </h3>
 
@@ -890,11 +1631,11 @@ th:nth-child(4){
 
           <th>No</th>
 
-          <th>Nama</th>
+          <th id="thNama">Nama</th>
 
-          <th>Kehadiran</th>
+          <th id="thStatus">Kehadiran</th>
 
-          <th>Tempat</th>
+          <th id="thTempat">Tempat</th>
 
         </tr>
 
@@ -947,8 +1688,8 @@ th:nth-child(4){
       IKATAN APOTEKER INDONESIA
     </h2>
 
-    <h3 style="margin:0;">
-      LAPORAN KEHADIRAN
+    <h3 style="margin:0;" id="pdfModeTitle">
+      LAPORAN KEGIATAN
     </h3>
 
     <h3 id="pdfJudul">
@@ -1062,6 +1803,8 @@ const API =
 ===================================================== */
 
 let currentEventId = "";
+
+let currentMode = "polling";
 
 let currentEvent = null;
 
@@ -1467,6 +2210,32 @@ function loadDashboard(idEvent){
     idEvent;
 
 
+  /*
+   * Dashboard tetap memakai endpoint lama
+   * untuk mode Polling.
+   *
+   * Mode lain hanya memakai endpoint
+   * yang sudah tersedia di Code.gs.
+   */
+
+  if(currentMode === "pendaftaran"){
+
+    loadPendaftaranDashboard(idEvent);
+
+    return;
+
+  }
+
+
+  if(currentMode === "absensi"){
+
+    loadAbsensiDashboard(idEvent);
+
+    return;
+
+  }
+
+
   showLoading();
 
 
@@ -1489,7 +2258,7 @@ function loadDashboard(idEvent){
 
       throw new Error(
         res?.message ||
-        "Dashboard tidak tersedia."
+        "Dashboard polling tidak tersedia."
       );
 
     }
@@ -1510,45 +2279,14 @@ function loadDashboard(idEvent){
     );
 
 
-    const summary =
-      res.summary || {};
-
-
-    document.getElementById(
-      "total"
-    ).innerText =
-      summary.total || 0;
-
-
-    document.getElementById(
-      "hadir"
-    ).innerText =
-      summary.hadir || 0;
-
-
-    document.getElementById(
-      "tidak"
-    ).innerText =
-      summary.tidak || 0;
-
-
-    document.getElementById(
-      "persen"
-    ).innerText =
-      (summary.persen || 0) +
-      "%";
-
-
-    renderChart(
-      Number(summary.hadir || 0),
-      Number(summary.tidak || 0)
+    setPollingStats(
+      res.summary || {}
     );
 
 
     currentPage = 1;
 
     renderTable();
-
 
     hideError();
 
@@ -1561,7 +2299,7 @@ function loadDashboard(idEvent){
 
       showError(
         error.message ||
-        "Gagal memuat dashboard."
+        "Gagal memuat dashboard polling."
       );
 
       resetDashboard();
@@ -1715,6 +2453,41 @@ function hideEventInfo(){
 
 function resetDashboard(){
 
+  setStatLabel(
+    "statLabelTotal",
+    currentMode === "pendaftaran"
+      ? "Total Pendaftar"
+      : currentMode === "absensi"
+        ? "Peserta"
+        : "Total"
+  );
+
+  setStatLabel(
+    "statLabelHadir",
+    currentMode === "pendaftaran"
+      ? "Terdaftar"
+      : currentMode === "absensi"
+        ? "Siap Absensi"
+        : "Hadir"
+  );
+
+  setStatLabel(
+    "statLabelTidak",
+    currentMode === "pendaftaran"
+      ? "Status Lain"
+      : currentMode === "absensi"
+        ? "Status"
+        : "Tidak Hadir"
+  );
+
+  setStatLabel(
+    "statLabelPersen",
+    currentMode === "absensi"
+      ? "Kesiapan"
+      : "Persentase"
+  );
+
+
   document.getElementById(
     "total"
   ).innerText = "0";
@@ -1844,26 +2617,43 @@ function getFilteredData(){
       const nama =
         String(
           x.NAMA || ""
-        )
-        .toLowerCase();
+        ).toLowerCase();
+
+
+      const instansi =
+        String(
+          x.INSTANSI || ""
+        ).toLowerCase();
 
 
       const status =
-        String(
-          x.KEHADIRAN || ""
-        );
+        currentMode === "polling"
+          ? String(
+              x.KEHADIRAN || ""
+            )
+          : String(
+              x.STATUS_PENDAFTARAN ||
+              x.KEHADIRAN ||
+              ""
+            );
 
 
       const cocokNama =
         nama.includes(
           keyword
+        ) ||
+        (
+          currentMode === "pendaftaran" &&
+          instansi.includes(
+            keyword
+          )
         );
 
 
       const cocokStatus =
         statusFilter
-          ? status ===
-            statusFilter
+          ? status.toUpperCase() ===
+            statusFilter.toUpperCase()
           : true;
 
 
@@ -1929,74 +2719,242 @@ function renderTable(){
     );
 
 
+  const tbody =
+    document.getElementById(
+      "data"
+    );
+
+
   let html = "";
 
 
   if(
-    pageData.length === 0
+    currentMode === "polling"
   ){
 
-    html =
-      `<tr>
-         <td colspan="4"
-             style="text-align:center;">
-           Data tidak ditemukan
-         </td>
-       </tr>`;
+    document.getElementById(
+      "thNama"
+    ).innerText = "Nama";
 
-  }else{
+    document.getElementById(
+      "thStatus"
+    ).innerText = "Kehadiran";
 
-    pageData.forEach(
-      function(d,i){
-
-        const status =
-          String(
-            d.KEHADIRAN || ""
-          );
+    document.getElementById(
+      "thTempat"
+    ).innerText = "Tempat";
 
 
-        const statusClass =
-          status === "Hadir"
-            ? "status-hadir"
-            : "status-tidak";
+    if(
+      pageData.length === 0
+    ){
+
+      html =
+        `<tr>
+           <td colspan="4"
+               style="text-align:center;">
+             Data tidak ditemukan
+           </td>
+         </tr>`;
+
+    }else{
+
+      pageData.forEach(
+        function(d,i){
+
+          const status =
+            String(
+              d.KEHADIRAN || ""
+            );
 
 
-        html +=
-          `<tr>
+          const statusClass =
+            status === "Hadir"
+              ? "status-hadir"
+              : "status-tidak";
 
-             <td>
-               ${start + i + 1}
-             </td>
 
-             <td>
-               ${escapeHTML(
-                 d.NAMA || "-"
-               )}
-             </td>
+          html +=
+            `<tr>
 
-             <td class="${statusClass}">
-               ${escapeHTML(
-                 status || "-"
-               )}
-             </td>
+               <td>
+                 ${start + i + 1}
+               </td>
 
-             <td>
-               ${escapeHTML(
-                 d.TEMPAT || "-"
-               )}
-             </td>
+               <td>
+                 ${escapeHTML(
+                   d.NAMA || "-"
+                 )}
+               </td>
 
-           </tr>`;
+               <td class="${statusClass}">
+                 ${escapeHTML(
+                   status || "-"
+                 )}
+               </td>
 
-      }
-    );
+               <td>
+                 ${escapeHTML(
+                   d.TEMPAT || "-"
+                 )}
+               </td>
+
+             </tr>`;
+
+        }
+      );
+
+    }
+
+  }
+
+  else if(
+    currentMode === "pendaftaran"
+  ){
+
+    document.getElementById(
+      "thNama"
+    ).innerText = "Nama";
+
+    document.getElementById(
+      "thStatus"
+    ).innerText = "Status";
+
+    document.getElementById(
+      "thTempat"
+    ).innerText = "Instansi";
+
+
+    if(
+      pageData.length === 0
+    ){
+
+      html =
+        `<tr>
+           <td colspan="4"
+               style="text-align:center;">
+             Data pendaftaran tidak ditemukan
+           </td>
+         </tr>`;
+
+    }else{
+
+      pageData.forEach(
+        function(d,i){
+
+          const status =
+            String(
+              d.STATUS_PENDAFTARAN || ""
+            );
+
+
+          const statusClass =
+            status.toUpperCase() ===
+            "TERDAFTAR"
+              ? "status-hadir"
+              : "status-tidak";
+
+
+          html +=
+            `<tr>
+
+               <td>
+                 ${start + i + 1}
+               </td>
+
+               <td>
+                 ${escapeHTML(
+                   d.NAMA || "-"
+                 )}
+               </td>
+
+               <td class="${statusClass}">
+                 ${escapeHTML(
+                   status || "-"
+                 )}
+               </td>
+
+               <td>
+                 ${escapeHTML(
+                   d.INSTANSI || "-"
+                 )}
+               </td>
+
+             </tr>`;
+
+        }
+      );
+
+    }
+
+  }
+
+  else{
+
+    document.getElementById(
+      "thNama"
+    ).innerText = "Nama";
+
+    document.getElementById(
+      "thStatus"
+    ).innerText = "Status";
+
+    document.getElementById(
+      "thTempat"
+    ).innerText = "Waktu Polling";
+
+
+    if(
+      pageData.length === 0
+    ){
+
+      html =
+        `<tr>
+           <td colspan="4"
+               style="text-align:center;">
+             Belum ada peserta siap absensi
+           </td>
+         </tr>`;
+
+    }else{
+
+      pageData.forEach(
+        function(d,i){
+
+          html +=
+            `<tr>
+
+               <td>
+                 ${start + i + 1}
+               </td>
+
+               <td>
+                 ${escapeHTML(
+                   d.NAMA || "-"
+                 )}
+               </td>
+
+               <td class="status-hadir">
+                 Hadir
+               </td>
+
+               <td>
+                 ${escapeHTML(
+                   d.TIMESTAMP || "-"
+                 )}
+               </td>
+
+             </tr>`;
+
+        }
+      );
+
+    }
 
   }
 
 
-  document.getElementById(
-    "data"
-  ).innerHTML =
+  tbody.innerHTML =
     html;
 
 
@@ -2341,6 +3299,19 @@ function exportExcel(){
     getFilteredData();
 
 
+  let titleStatus =
+    currentMode === "polling"
+      ? "Kehadiran"
+      : "Status";
+
+  let titleThird =
+    currentMode === "polling"
+      ? "Tempat"
+      : currentMode === "pendaftaran"
+        ? "Instansi"
+        : "Waktu Polling";
+
+
   let html =
     `<table border="1">
 
@@ -2364,14 +3335,14 @@ function exportExcel(){
            style="
              background:#0d6efd;
              color:white;">
-           Kehadiran
+           ${titleStatus}
          </th>
 
          <th
            style="
              background:#0d6efd;
              color:white;">
-           Tempat
+           ${titleThird}
          </th>
 
        </tr>`;
@@ -2379,6 +3350,22 @@ function exportExcel(){
 
   filtered.forEach(
     function(d,i){
+
+      const status =
+        currentMode === "polling"
+          ? d.KEHADIRAN || ""
+          : currentMode === "pendaftaran"
+            ? d.STATUS_PENDAFTARAN || ""
+            : "Hadir";
+
+
+      const third =
+        currentMode === "polling"
+          ? d.TEMPAT || ""
+          : currentMode === "pendaftaran"
+            ? d.INSTANSI || ""
+            : d.TIMESTAMP || "";
+
 
       html +=
         `<tr>
@@ -2395,13 +3382,13 @@ function exportExcel(){
 
            <td>
              ${escapeHTML(
-               d.KEHADIRAN || ""
+               status
              )}
            </td>
 
            <td>
              ${escapeHTML(
-               d.TEMPAT || ""
+               third
              )}
            </td>
 
@@ -2437,8 +3424,16 @@ function exportExcel(){
     );
 
 
+  const prefix =
+    currentMode === "polling"
+      ? "kehadiran_"
+      : currentMode === "pendaftaran"
+        ? "pendaftaran_"
+        : "peserta_absensi_";
+
+
   link.download =
-    "kehadiran_" +
+    prefix +
     (
       currentEvent.ID_EVENT ||
       "event"
@@ -2494,6 +3489,16 @@ function exportPDF(){
 
 
   document.getElementById(
+    "pdfModeTitle"
+  ).innerText =
+    currentMode === "polling"
+      ? "LAPORAN POLLING KEHADIRAN"
+      : currentMode === "pendaftaran"
+        ? "LAPORAN PENDAFTARAN PESERTA"
+        : "LAPORAN PESERTA ABSENSI";
+
+
+  document.getElementById(
     "pdfJudul"
   ).innerText =
     currentEvent.JUDUL ||
@@ -2528,24 +3533,45 @@ function exportPDF(){
     filtered.length;
 
 
+  const jumlahHadir =
+    currentMode === "polling"
+      ? filtered.filter(
+          x =>
+            x.KEHADIRAN ===
+            "Hadir"
+        ).length
+      : currentMode === "pendaftaran"
+        ? filtered.filter(
+            x =>
+              String(
+                x.STATUS_PENDAFTARAN || ""
+              )
+                .toUpperCase() ===
+              "TERDAFTAR"
+          ).length
+        : filtered.length;
+
+
+  const jumlahTidak =
+    currentMode === "polling"
+      ? filtered.filter(
+          x =>
+            x.KEHADIRAN ===
+            "Tidak Hadir"
+        ).length
+      : 0;
+
+
   document.getElementById(
     "pdfHadir"
   ).innerText =
-    filtered.filter(
-      x =>
-        x.KEHADIRAN ===
-        "Hadir"
-    ).length;
+    jumlahHadir;
 
 
   document.getElementById(
     "pdfTidak"
   ).innerText =
-    filtered.filter(
-      x =>
-        x.KEHADIRAN ===
-        "Tidak Hadir"
-    ).length;
+    jumlahTidak;
 
 
   let html = "";
@@ -2553,6 +3579,22 @@ function exportPDF(){
 
   filtered.forEach(
     function(d,i){
+
+      const status =
+        currentMode === "polling"
+          ? d.KEHADIRAN || ""
+          : currentMode === "pendaftaran"
+            ? d.STATUS_PENDAFTARAN || ""
+            : "Hadir";
+
+
+      const third =
+        currentMode === "polling"
+          ? d.TEMPAT || ""
+          : currentMode === "pendaftaran"
+            ? d.INSTANSI || ""
+            : d.TIMESTAMP || "";
+
 
       html +=
         `<tr>
@@ -2569,25 +3611,15 @@ function exportPDF(){
            </td>
 
            <td
-             style="
-               text-align:center;
-               color:${
-                 d.KEHADIRAN ===
-                 "Hadir"
-                   ? "green"
-                   : "red"
-               };
-             ">
-
+             style="text-align:center;">
              ${escapeHTML(
-               d.KEHADIRAN || ""
+               status
              )}
-
            </td>
 
            <td>
              ${escapeHTML(
-               d.TEMPAT || ""
+               third
              )}
            </td>
 
@@ -2625,7 +3657,13 @@ function exportPDF(){
       ],
 
       filename:
-        "laporan_kehadiran_" +
+        (
+          currentMode === "polling"
+            ? "laporan_kehadiran_"
+            : currentMode === "pendaftaran"
+              ? "laporan_pendaftaran_"
+              : "laporan_absensi_"
+        ) +
         (
           currentEvent.ID_EVENT ||
           "event"
@@ -2633,40 +3671,27 @@ function exportPDF(){
         ".pdf",
 
       image:{
-
         type:"jpeg",
-
         quality:1
-
       },
 
       html2canvas:{
-
         scale:2,
-
         useCORS:true,
-
         scrollY:0
-
       },
 
       jsPDF:{
-
         unit:"mm",
-
         format:"a4",
-
         orientation:"portrait"
-
       },
 
       pagebreak:{
-
         mode:[
           "css",
           "legacy"
         ]
-
       }
 
     })
@@ -2690,6 +3715,8 @@ function exportPDF(){
 /* =====================================================
    LOAD AWAL
 ===================================================== */
+
+updateModeInterface();
 
 loadEvents();
 
