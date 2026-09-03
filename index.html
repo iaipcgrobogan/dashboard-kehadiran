@@ -144,6 +144,983 @@ body{
 
 
 /* =====================================================
+   EVENT INFORMATION
+===================================================== */
+
+.event-info{
+
+  margin-top:12px;
+
+  padding:14px;
+
+  border-radius:12px;
+
+  background:#f8f9fa;
+
+  border:1px solid #e9ecef;
+
+}
+
+.event-info h3{
+
+  margin:
+    0 0 8px;
+
+  color:#0d6efd;
+
+}
+
+.event-row{
+
+  margin:5px 0;
+
+  color:#495057;
+
+}
+
+
+/* =====================================================
+   BADGE
+===================================================== */
+
+.badge{
+
+  display:inline-block;
+
+  padding:
+    5px 10px;
+
+  border-radius:20px;
+
+  font-size:12px;
+
+  font-weight:bold;
+
+}
+
+.badge-open{
+
+  background:#d1e7dd;
+
+  color:#198754;
+
+}
+
+.badge-closed{
+
+  background:#f8d7da;
+
+  color:#dc3545;
+
+}
+
+
+/* =====================================================
+   STATS
+===================================================== */
+
+.stats{
+
+  display:grid;
+
+  grid-template-columns:
+    repeat(4,1fr);
+
+  gap:10px;
+
+}
+
+
+.stat{
+
+  background:#f1f3f5;
+
+  padding:15px 10px;
+
+  border-radius:10px;
+
+  text-align:center;
+
+}
+
+
+.stat-label{
+
+  font-size:13px;
+
+  color:#6c757d;
+
+}
+
+
+.stat-number{
+
+  display:block;
+
+  margin-top:4px;
+
+  font-size:25px;
+
+  font-weight:bold;
+
+}
+
+
+/* =====================================================
+   CHART
+===================================================== */
+
+.chart-container{
+
+  max-width:320px;
+
+  margin:auto;
+
+}
+
+canvas{
+
+  max-width:280px;
+
+  margin:auto;
+
+  pointer-events:none;
+
+}
+
+
+/* =====================================================
+   TOOLBAR
+===================================================== */
+
+.toolbar{
+
+  display:flex;
+
+  gap:10px;
+
+  flex-wrap:wrap;
+
+  align-items:center;
+
+}
+
+
+.search-box{
+
+  flex:1;
+
+  min-width:220px;
+
+}
+
+
+input,
+select{
+
+  width:100%;
+
+  padding:10px;
+
+  border-radius:10px;
+
+  border:1px solid #ccc;
+
+  background:white;
+
+}
+
+
+button{
+
+  margin:2px;
+
+  padding:
+    8px 13px;
+
+  border:none;
+
+  border-radius:7px;
+
+  cursor:pointer;
+
+  background:#e9ecef;
+
+  transition:.2s;
+
+}
+
+
+button:hover{
+
+  background:#0d6efd;
+
+  color:white;
+
+}
+
+
+.btn-primary{
+
+  background:#0d6efd;
+
+  color:white;
+
+}
+
+
+.btn-success{
+
+  background:#198754;
+
+  color:white;
+
+}
+
+
+/* =====================================================
+   TABLE
+===================================================== */
+
+.table-wrapper{
+
+  width:100%;
+
+  overflow-x:auto;
+
+}
+
+
+table{
+
+  width:100%;
+
+  border-collapse:collapse;
+
+  min-width:550px;
+
+}
+
+
+th{
+
+  background:#0d6efd;
+
+  color:white;
+
+  padding:10px;
+
+}
+
+
+td{
+
+  padding:8px;
+
+  border-bottom:
+    1px solid #ddd;
+
+}
+
+
+td:nth-child(1),
+td:nth-child(3),
+td:nth-child(4),
+th:nth-child(1),
+th:nth-child(3),
+th:nth-child(4){
+
+  text-align:center;
+
+}
+
+
+.status-hadir{
+
+  color:#198754;
+
+  font-weight:bold;
+
+}
+
+
+.status-tidak{
+
+  color:#dc3545;
+
+  font-weight:bold;
+
+}
+
+
+/* =====================================================
+   PAGINATION
+===================================================== */
+
+#pagination{
+
+  text-align:center;
+
+  margin-top:12px;
+
+}
+
+
+#pagination button{
+
+  min-width:32px;
+
+}
+
+
+#pagination button.active{
+
+  background:#0d6efd;
+
+  color:white;
+
+  font-weight:bold;
+
+}
+
+
+#pagination span{
+
+  margin:0 4px;
+
+  font-weight:bold;
+
+}
+
+
+/* =====================================================
+   LOADING
+===================================================== */
+
+.loading{
+
+  text-align:center;
+
+  padding:20px;
+
+  color:#6c757d;
+
+}
+
+
+/* =====================================================
+   ERROR
+===================================================== */
+
+.error-box{
+
+  background:#f8d7da;
+
+  color:#842029;
+
+  border-radius:10px;
+
+  padding:12px;
+
+  margin-top:10px;
+
+  display:none;
+
+}
+
+
+/* =====================================================
+   PDF
+===================================================== */
+
+#pdfContent{
+
+  display:none;
+
+  padding:20px;
+
+  font-family:Arial;
+
+}
+
+
+#pdfContent table{
+
+  width:100%;
+
+  border-collapse:collapse;
+
+}
+
+
+#pdfContent th,
+#pdfContent td{
+
+  border:1px solid #333;
+
+  padding:6px;
+
+}
+
+
+#pdfContent tr{
+
+  page-break-inside:avoid;
+
+}
+
+
+#pdfContent thead{
+
+  display:table-header-group;
+
+}
+
+
+#pdfContent tfoot{
+
+  display:table-footer-group;
+
+}
+
+
+/* =====================================================
+   RESPONSIVE
+===================================================== */
+
+@media(max-width:700px){
+
+  .stats{
+
+    grid-template-columns:
+      1fr 1fr;
+
+  }
+
+  .header h2{
+
+    font-size:20px;
+
+  }
+
+  .card{
+
+    margin:10px;
+
+  }
+
+}
+
+
+/* =====================================================
+   PENYESUAIAN DESAIN DASHBOARD KEGIATAN
+===================================================== */
+.header{padding:26px 20px 30px;box-shadow:0 4px 18px rgba(13,110,253,.18);}
+.header img{width:76px;height:76px;object-fit:contain;background:rgba(255,255,255,.96);border-radius:50%;padding:5px;box-shadow:0 5px 18px rgba(0,0,0,.12);}
+.header h2{font-size:28px;letter-spacing:.1px;}
+.header p{font-size:15px;}
+.container{max-width:1180px;padding:0 8px 25px;}
+.card{margin:16px 8px;padding:20px;border:1px solid #edf0f3;box-shadow:0 8px 24px rgba(32,45,64,.08);}
+.event-select{height:48px;border:1px solid #d7dde5;box-shadow:0 2px 8px rgba(0,0,0,.04);}
+.mode-title{font-weight:700;color:#495057;margin-top:18px;}
+.mode-switch{gap:10px;}
+.mode-btn{min-height:46px;border-radius:12px;transition:.2s ease;box-shadow:0 2px 6px rgba(0,0,0,.04);}
+.mode-btn.active{box-shadow:0 5px 14px rgba(13,110,253,.22);}
+.mode-description{padding:9px 12px;border-radius:9px;background:#f7f9fb;}
+.event-info{margin-top:16px;border:1px solid #e7ebef;background:linear-gradient(180deg,#fbfcfd,#f5f7f9);}
+.stat{border:1px solid #e9edf1;background:#f8fafc;min-height:92px;display:flex;flex-direction:column;justify-content:center;}
+.stat-number{font-size:29px;}
+.toolbar{align-items:stretch;}
+.toolbar button{min-height:42px;font-weight:600;}
+.btn-refresh{background:#6c757d !important;color:#fff !important;}
+.btn-refresh:disabled{opacity:.65;cursor:not-allowed;}
+.data-status-row{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:12px;padding-top:10px;border-top:1px solid #eef1f4;font-size:12px;color:#6c757d;}
+.auto-refresh-note{white-space:nowrap;}
+.table-wrapper{margin-top:12px;border-radius:10px;}
+@media(max-width:700px){.header h2{font-size:22px;}.container{padding:0 4px 20px;}.card{margin:12px 4px;padding:15px;}.stats{grid-template-columns:1fr 1fr;}.data-status-row{align-items:flex-start;flex-direction:column;}.auto-refresh-note{white-space:normal;}}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<!-- ===================================================
+     HEADER
+=================================================== -->
+
+<div class="header">
+
+  <img
+    src="https://i.ibb.co/5WWKSY0Z/Logo-IAI-Grobogan-b.png"
+    alt="Logo IAI Grobogan">
+
+  <h2>📊 Dashboard Kegiatan</h2>
+
+  <p>PC IAI Grobogan</p>
+
+</div>
+
+
+<div class="container">
+
+
+<!-- ===================================================
+     PILIH EVENT
+=================================================== -->
+
+<div class="card">
+
+  <div class="event-title">
+    Pilih acara yang ingin ditampilkan
+  </div>
+
+  <select
+    id="eventSelect"
+    class="event-select">
+
+    <option value="">
+      Memuat daftar acara...
+    </option>
+
+  </select>
+
+  <div class="mode-title">
+    Tampilkan data
+  </div>
+
+  <div class="mode-switch">
+
+    <button
+      type="button"
+      id="modePolling"
+      class="mode-btn active"
+      onclick="setMode('polling')">
+      📊 Polling
+    </button>
+
+    <button
+      type="button"
+      id="modePendaftaran"
+      class="mode-btn"
+      onclick="setMode('pendaftaran')">
+      📝 Pendaftaran
+    </button>
+
+    <button
+      type="button"
+      id="modeAbsensi"
+      class="mode-btn"
+      onclick="setMode('absensi')">
+      🟢 Absensi
+    </button>
+
+  </div>
+
+  <div
+    id="modeDescription"
+    class="mode-description">
+    Rekap konfirmasi kehadiran dari hasil polling.
+  </div>
+
+
+  <div
+    id="eventInfo"
+    class="event-info"
+    style="display:none;">
+
+    <h3 id="eventJudul">
+      -
+    </h3>
+
+    <div
+      class="event-row"
+      id="eventTanggal">
+      📅 -
+    </div>
+
+    <div
+      class="event-row"
+      id="eventWaktu">
+      🕐 -
+    </div>
+
+    <div
+      class="event-row"
+      id="eventTempat">
+      📍 -
+    </div>
+
+    <div
+      class="event-row"
+      id="eventDeskripsi">
+      📝 -
+    </div>
+
+    <div
+      class="event-row">
+
+      Status:
+      <span id="eventStatus"
+            class="badge">
+        -
+      </span>
+
+    </div>
+
+  </div>
+
+
+  <div
+    id="errorBox"
+    class="error-box">
+  </div>
+
+</div>
+
+
+<!-- ===================================================
+     STATISTIK
+=================================================== -->
+
+<div class="card">
+
+  <div class="stats">
+
+    <div class="stat">
+
+      <span class="stat-label" id="statLabelTotal">
+        Total
+      </span>
+
+      <span
+        class="stat-number"
+        id="total">
+        0
+      </span>
+
+    </div>
+
+
+    <div class="stat">
+
+      <span class="stat-label" id="statLabelHadir">
+        Hadir
+      </span>
+
+      <span
+        class="stat-number"
+        id="hadir">
+        0
+      </span>
+
+    </div>
+
+
+    <div class="stat">
+
+      <span class="stat-label" id="statLabelTidak">
+        Tidak Hadir
+      </span>
+
+      <span
+        class="stat-number"
+        id="tidak">
+        0
+      </span>
+
+    </div>
+
+
+    <div class="stat">
+
+      <span class="stat-label" id="statLabelPersen">
+        Persentase
+      </span>
+
+      <span
+        class="stat-number"
+        id="persen">
+        0%
+      </span>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+<!-- ===================================================
+     CHART
+=================================================== -->
+
+<div class="card" id="chartCard">
+
+  <h3 style="text-align:center;" id="chartTitle">
+    📈 Grafik Kehadiran
+  </h3>
+
+  <div class="chart-container">
+
+    <canvas
+      id="chartKehadiran">
+    </canvas>
+
+  </div>
+
+</div>
+
+
+<!-- ===================================================
+     DATA PESERTA
+=================================================== -->
+
+<div class="card">
+
+  <div class="toolbar">
+
+
+    <div class="search-box">
+
+      <input
+        type="text"
+        id="search"
+        placeholder="🔍 Cari nama...">
+
+    </div>
+
+
+    <div style="min-width:150px;">
+
+      <select id="filterStatus">
+
+        <option value="">
+          Semua
+        </option>
+
+        <option value="Hadir">
+          Hadir
+        </option>
+
+        <option value="Tidak Hadir">
+          Tidak Hadir
+        </option>
+
+      </select>
+
+    </div>
+
+
+    <button
+      class="btn-success"
+      onclick="exportExcel()">
+
+      📥 Excel
+
+    </button>
+
+
+    <button
+      class="btn-primary"
+      onclick="exportPDF()">
+
+      📄 PDF
+
+    </button>
+
+
+    <button
+      id="refreshButton"
+      class="btn-refresh"
+      onclick="manualRefresh()">
+
+      🔄 Refresh
+
+    </button>
+
+
+  </div>
+
+  <div class="data-status-row">
+    <span id="lastUpdatedText">Data belum diperbarui.</span>
+    <span class="auto-refresh-note">⏱ Otomatis diperbarui setiap 15 menit</span>
+  </div>
+
+  <br>
+
+  <div class="table-wrapper">
+
+    <table>
+
+      <thead>
+
+        <tr>
+
+          <th>No</th>
+
+          <th id="thNama">Nama</th>
+
+          <th id="thStatus">Kehadiran</th>
+
+          <th id="thTempat">Tempat</th>
+
+        </tr>
+
+      </thead>
+
+      <tbody id="data">
+
+        <tr>
+
+          <td
+            colspan="4"
+            class="loading">
+
+            Silakan pilih acara
+
+          </td>
+
+        </tr>
+
+      </tbody>
+
+    </table>
+
+  </div>
+
+
+  <div id="pagination"></div>
+
+</div>
+
+
+</div>
+
+
+<!-- ===================================================
+     TEMPLATE PDF
+=================================================== -->
+
+<div
+  id="pdfContent">
+
+  <div
+    style="text-align:center;">
+
+    <img
+      src="https://i.ibb.co/5WWKSY0Z/Logo-IAI-Grobogan-b.png"
+      width="60">
+
+    <h2 style="margin:5px 0;">
+      IKATAN APOTEKER INDONESIA
+    </h2>
+
+    <h3 style="margin:0;" id="pdfModeTitle">
+      LAPORAN KEGIATAN
+    </h3>
+
+    <h3 id="pdfJudul">
+      -
+    </h3>
+
+    <p>
+      Dicetak:
+      <span id="tanggalCetak"></span>
+    </p>
+
+  </div>
+
+
+  <hr>
+
+
+  <p>
+    <b>Tanggal:</b>
+    <span id="pdfTanggal"></span>
+  </p>
+
+  <p>
+    <b>Waktu:</b>
+    <span id="pdfWaktu"></span>
+  </p>
+
+  <p>
+    <b>Tempat:</b>
+    <span id="pdfTempat"></span>
+  </p>
+
+
+  <p>
+    <b>Total:</b>
+    <span id="pdfTotal"></span>
+  </p>
+
+  <p>
+    <b>Hadir:</b>
+    <span id="pdfHadir"></span>
+  </p>
+
+  <p>
+    <b>Tidak Hadir:</b>
+    <span id="pdfTidak"></span>
+  </p>
+
+
+  <br>
+
+
+  <table>
+
+    <thead>
+
+      <tr>
+
+        <th>No</th>
+
+        <th>Nama</th>
+
+        <th>Kehadiran</th>
+
+        <th>Tempat</th>
+
+      </tr>
+
+    </thead>
+
+    <tbody id="pdfTable"></tbody>
+
+  </table>
+
+
+  <div
+    style="
+      text-align:right;
+      margin-top:40px;
+    ">
+
+    <p>
+      Grobogan,
+      <span id="tanggalCetak2"></span>
+    </p>
+
+    <br><br><br>
+
+    <p>
+      <b>( Ketua Panitia )</b>
+    </p>
+
+  </div>
+
+</div>
+
+
+
+<script>
+
+/* =====================================================
    MODE DASHBOARD
 ===================================================== */
 
@@ -857,981 +1834,6 @@ function setStatNumber(id, value){
 }
 
 
-
-
-
-/* =====================================================
-   EVENT INFORMATION
-===================================================== */
-
-.event-info{
-
-  margin-top:12px;
-
-  padding:14px;
-
-  border-radius:12px;
-
-  background:#f8f9fa;
-
-  border:1px solid #e9ecef;
-
-}
-
-.event-info h3{
-
-  margin:
-    0 0 8px;
-
-  color:#0d6efd;
-
-}
-
-.event-row{
-
-  margin:5px 0;
-
-  color:#495057;
-
-}
-
-
-/* =====================================================
-   BADGE
-===================================================== */
-
-.badge{
-
-  display:inline-block;
-
-  padding:
-    5px 10px;
-
-  border-radius:20px;
-
-  font-size:12px;
-
-  font-weight:bold;
-
-}
-
-.badge-open{
-
-  background:#d1e7dd;
-
-  color:#198754;
-
-}
-
-.badge-closed{
-
-  background:#f8d7da;
-
-  color:#dc3545;
-
-}
-
-
-/* =====================================================
-   STATS
-===================================================== */
-
-.stats{
-
-  display:grid;
-
-  grid-template-columns:
-    repeat(4,1fr);
-
-  gap:10px;
-
-}
-
-
-.stat{
-
-  background:#f1f3f5;
-
-  padding:15px 10px;
-
-  border-radius:10px;
-
-  text-align:center;
-
-}
-
-
-.stat-label{
-
-  font-size:13px;
-
-  color:#6c757d;
-
-}
-
-
-.stat-number{
-
-  display:block;
-
-  margin-top:4px;
-
-  font-size:25px;
-
-  font-weight:bold;
-
-}
-
-
-/* =====================================================
-   CHART
-===================================================== */
-
-.chart-container{
-
-  max-width:320px;
-
-  margin:auto;
-
-}
-
-canvas{
-
-  max-width:280px;
-
-  margin:auto;
-
-  pointer-events:none;
-
-}
-
-
-/* =====================================================
-   TOOLBAR
-===================================================== */
-
-.toolbar{
-
-  display:flex;
-
-  gap:10px;
-
-  flex-wrap:wrap;
-
-  align-items:center;
-
-}
-
-
-.search-box{
-
-  flex:1;
-
-  min-width:220px;
-
-}
-
-
-input,
-select{
-
-  width:100%;
-
-  padding:10px;
-
-  border-radius:10px;
-
-  border:1px solid #ccc;
-
-  background:white;
-
-}
-
-
-button{
-
-  margin:2px;
-
-  padding:
-    8px 13px;
-
-  border:none;
-
-  border-radius:7px;
-
-  cursor:pointer;
-
-  background:#e9ecef;
-
-  transition:.2s;
-
-}
-
-
-button:hover{
-
-  background:#0d6efd;
-
-  color:white;
-
-}
-
-
-.btn-primary{
-
-  background:#0d6efd;
-
-  color:white;
-
-}
-
-
-.btn-success{
-
-  background:#198754;
-
-  color:white;
-
-}
-
-
-/* =====================================================
-   TABLE
-===================================================== */
-
-.table-wrapper{
-
-  width:100%;
-
-  overflow-x:auto;
-
-}
-
-
-table{
-
-  width:100%;
-
-  border-collapse:collapse;
-
-  min-width:550px;
-
-}
-
-
-th{
-
-  background:#0d6efd;
-
-  color:white;
-
-  padding:10px;
-
-}
-
-
-td{
-
-  padding:8px;
-
-  border-bottom:
-    1px solid #ddd;
-
-}
-
-
-td:nth-child(1),
-td:nth-child(3),
-td:nth-child(4),
-th:nth-child(1),
-th:nth-child(3),
-th:nth-child(4){
-
-  text-align:center;
-
-}
-
-
-.status-hadir{
-
-  color:#198754;
-
-  font-weight:bold;
-
-}
-
-
-.status-tidak{
-
-  color:#dc3545;
-
-  font-weight:bold;
-
-}
-
-
-/* =====================================================
-   PAGINATION
-===================================================== */
-
-#pagination{
-
-  text-align:center;
-
-  margin-top:12px;
-
-}
-
-
-#pagination button{
-
-  min-width:32px;
-
-}
-
-
-#pagination button.active{
-
-  background:#0d6efd;
-
-  color:white;
-
-  font-weight:bold;
-
-}
-
-
-#pagination span{
-
-  margin:0 4px;
-
-  font-weight:bold;
-
-}
-
-
-/* =====================================================
-   LOADING
-===================================================== */
-
-.loading{
-
-  text-align:center;
-
-  padding:20px;
-
-  color:#6c757d;
-
-}
-
-
-/* =====================================================
-   ERROR
-===================================================== */
-
-.error-box{
-
-  background:#f8d7da;
-
-  color:#842029;
-
-  border-radius:10px;
-
-  padding:12px;
-
-  margin-top:10px;
-
-  display:none;
-
-}
-
-
-/* =====================================================
-   PDF
-===================================================== */
-
-#pdfContent{
-
-  display:none;
-
-  padding:20px;
-
-  font-family:Arial;
-
-}
-
-
-#pdfContent table{
-
-  width:100%;
-
-  border-collapse:collapse;
-
-}
-
-
-#pdfContent th,
-#pdfContent td{
-
-  border:1px solid #333;
-
-  padding:6px;
-
-}
-
-
-#pdfContent tr{
-
-  page-break-inside:avoid;
-
-}
-
-
-#pdfContent thead{
-
-  display:table-header-group;
-
-}
-
-
-#pdfContent tfoot{
-
-  display:table-footer-group;
-
-}
-
-
-/* =====================================================
-   RESPONSIVE
-===================================================== */
-
-@media(max-width:700px){
-
-  .stats{
-
-    grid-template-columns:
-      1fr 1fr;
-
-  }
-
-  .header h2{
-
-    font-size:20px;
-
-  }
-
-  .card{
-
-    margin:10px;
-
-  }
-
-}
-
-
-/* =====================================================
-   PENYESUAIAN DESAIN DASHBOARD KEGIATAN
-===================================================== */
-.header{padding:26px 20px 30px;box-shadow:0 4px 18px rgba(13,110,253,.18);}
-.header img{width:76px;height:76px;object-fit:contain;background:rgba(255,255,255,.96);border-radius:50%;padding:5px;box-shadow:0 5px 18px rgba(0,0,0,.12);}
-.header h2{font-size:28px;letter-spacing:.1px;}
-.header p{font-size:15px;}
-.container{max-width:1180px;padding:0 8px 25px;}
-.card{margin:16px 8px;padding:20px;border:1px solid #edf0f3;box-shadow:0 8px 24px rgba(32,45,64,.08);}
-.event-select{height:48px;border:1px solid #d7dde5;box-shadow:0 2px 8px rgba(0,0,0,.04);}
-.mode-title{font-weight:700;color:#495057;margin-top:18px;}
-.mode-switch{gap:10px;}
-.mode-btn{min-height:46px;border-radius:12px;transition:.2s ease;box-shadow:0 2px 6px rgba(0,0,0,.04);}
-.mode-btn.active{box-shadow:0 5px 14px rgba(13,110,253,.22);}
-.mode-description{padding:9px 12px;border-radius:9px;background:#f7f9fb;}
-.event-info{margin-top:16px;border:1px solid #e7ebef;background:linear-gradient(180deg,#fbfcfd,#f5f7f9);}
-.stat{border:1px solid #e9edf1;background:#f8fafc;min-height:92px;display:flex;flex-direction:column;justify-content:center;}
-.stat-number{font-size:29px;}
-.toolbar{align-items:stretch;}
-.toolbar button{min-height:42px;font-weight:600;}
-.btn-refresh{background:#6c757d !important;color:#fff !important;}
-.btn-refresh:disabled{opacity:.65;cursor:not-allowed;}
-.data-status-row{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:12px;padding-top:10px;border-top:1px solid #eef1f4;font-size:12px;color:#6c757d;}
-.auto-refresh-note{white-space:nowrap;}
-.table-wrapper{margin-top:12px;border-radius:10px;}
-@media(max-width:700px){.header h2{font-size:22px;}.container{padding:0 4px 20px;}.card{margin:12px 4px;padding:15px;}.stats{grid-template-columns:1fr 1fr;}.data-status-row{align-items:flex-start;flex-direction:column;}.auto-refresh-note{white-space:normal;}}
-
-</style>
-
-</head>
-
-
-<body>
-
-
-<!-- ===================================================
-     HEADER
-=================================================== -->
-
-<div class="header">
-
-  <img
-    src="https://i.ibb.co.com/5WWKSY0Z/Logo-IAI-Grobogan-b.png"
-    alt="Logo IAI Grobogan">
-
-  <h2>📊 Dashboard Kegiatan</h2>
-
-  <p>PC IAI Grobogan</p>
-
-</div>
-
-
-<div class="container">
-
-
-<!-- ===================================================
-     PILIH EVENT
-=================================================== -->
-
-<div class="card">
-
-  <div class="event-title">
-    Pilih acara yang ingin ditampilkan
-  </div>
-
-  <select
-    id="eventSelect"
-    class="event-select">
-
-    <option value="">
-      Memuat daftar acara...
-    </option>
-
-  </select>
-
-  <div class="mode-title">
-    Tampilkan data
-  </div>
-
-  <div class="mode-switch">
-
-    <button
-      type="button"
-      id="modePolling"
-      class="mode-btn active"
-      onclick="setMode('polling')">
-      📊 Polling
-    </button>
-
-    <button
-      type="button"
-      id="modePendaftaran"
-      class="mode-btn"
-      onclick="setMode('pendaftaran')">
-      📝 Pendaftaran
-    </button>
-
-    <button
-      type="button"
-      id="modeAbsensi"
-      class="mode-btn"
-      onclick="setMode('absensi')">
-      🟢 Absensi
-    </button>
-
-  </div>
-
-  <div
-    id="modeDescription"
-    class="mode-description">
-    Rekap konfirmasi kehadiran dari hasil polling.
-  </div>
-
-
-  <div
-    id="eventInfo"
-    class="event-info"
-    style="display:none;">
-
-    <h3 id="eventJudul">
-      -
-    </h3>
-
-    <div
-      class="event-row"
-      id="eventTanggal">
-      📅 -
-    </div>
-
-    <div
-      class="event-row"
-      id="eventWaktu">
-      🕐 -
-    </div>
-
-    <div
-      class="event-row"
-      id="eventTempat">
-      📍 -
-    </div>
-
-    <div
-      class="event-row"
-      id="eventDeskripsi">
-      📝 -
-    </div>
-
-    <div
-      class="event-row">
-
-      Status:
-      <span id="eventStatus"
-            class="badge">
-        -
-      </span>
-
-    </div>
-
-  </div>
-
-
-  <div
-    id="errorBox"
-    class="error-box">
-  </div>
-
-</div>
-
-
-<!-- ===================================================
-     STATISTIK
-=================================================== -->
-
-<div class="card">
-
-  <div class="stats">
-
-    <div class="stat">
-
-      <span class="stat-label" id="statLabelTotal">
-        Total
-      </span>
-
-      <span
-        class="stat-number"
-        id="total">
-        0
-      </span>
-
-    </div>
-
-
-    <div class="stat">
-
-      <span class="stat-label" id="statLabelHadir">
-        Hadir
-      </span>
-
-      <span
-        class="stat-number"
-        id="hadir">
-        0
-      </span>
-
-    </div>
-
-
-    <div class="stat">
-
-      <span class="stat-label" id="statLabelTidak">
-        Tidak Hadir
-      </span>
-
-      <span
-        class="stat-number"
-        id="tidak">
-        0
-      </span>
-
-    </div>
-
-
-    <div class="stat">
-
-      <span class="stat-label" id="statLabelPersen">
-        Persentase
-      </span>
-
-      <span
-        class="stat-number"
-        id="persen">
-        0%
-      </span>
-
-    </div>
-
-  </div>
-
-</div>
-
-
-<!-- ===================================================
-     CHART
-=================================================== -->
-
-<div class="card" id="chartCard">
-
-  <h3 style="text-align:center;" id="chartTitle">
-    📈 Grafik Kehadiran
-  </h3>
-
-  <div class="chart-container">
-
-    <canvas
-      id="chartKehadiran">
-    </canvas>
-
-  </div>
-
-</div>
-
-
-<!-- ===================================================
-     DATA PESERTA
-=================================================== -->
-
-<div class="card">
-
-  <div class="toolbar">
-
-
-    <div class="search-box">
-
-      <input
-        type="text"
-        id="search"
-        placeholder="🔍 Cari nama...">
-
-    </div>
-
-
-    <div style="min-width:150px;">
-
-      <select id="filterStatus">
-
-        <option value="">
-          Semua
-        </option>
-
-        <option value="Hadir">
-          Hadir
-        </option>
-
-        <option value="Tidak Hadir">
-          Tidak Hadir
-        </option>
-
-      </select>
-
-    </div>
-
-
-    <button
-      class="btn-success"
-      onclick="exportExcel()">
-
-      📥 Excel
-
-    </button>
-
-
-    <button
-      class="btn-primary"
-      onclick="exportPDF()">
-
-      📄 PDF
-
-    </button>
-
-
-    <button
-      onclick="loadDashboard(currentEventId)">
-
-      🔄 Refresh
-
-    </button>
-
-
-  </div>
-
-
-  <br>
-
-
-  <div class="table-wrapper">
-
-    <table>
-
-      <thead>
-
-        <tr>
-
-          <th>No</th>
-
-          <th id="thNama">Nama</th>
-
-          <th id="thStatus">Kehadiran</th>
-
-          <th id="thTempat">Tempat</th>
-
-        </tr>
-
-      </thead>
-
-      <tbody id="data">
-
-        <tr>
-
-          <td
-            colspan="4"
-            class="loading">
-
-            Silakan pilih acara
-
-          </td>
-
-        </tr>
-
-      </tbody>
-
-    </table>
-
-  </div>
-
-
-  <div id="pagination"></div>
-
-</div>
-
-
-</div>
-
-
-<!-- ===================================================
-     TEMPLATE PDF
-=================================================== -->
-
-<div
-  id="pdfContent">
-
-  <div
-    style="text-align:center;">
-
-    <img
-      src="https://i.ibb.co/5WWKSY0Z/Logo-IAI-Grobogan-b.png"
-      width="60">
-
-    <h2 style="margin:5px 0;">
-      IKATAN APOTEKER INDONESIA
-    </h2>
-
-    <h3 style="margin:0;" id="pdfModeTitle">
-      LAPORAN KEGIATAN
-    </h3>
-
-    <h3 id="pdfJudul">
-      -
-    </h3>
-
-    <p>
-      Dicetak:
-      <span id="tanggalCetak"></span>
-    </p>
-
-  </div>
-
-
-  <hr>
-
-
-  <p>
-    <b>Tanggal:</b>
-    <span id="pdfTanggal"></span>
-  </p>
-
-  <p>
-    <b>Waktu:</b>
-    <span id="pdfWaktu"></span>
-  </p>
-
-  <p>
-    <b>Tempat:</b>
-    <span id="pdfTempat"></span>
-  </p>
-
-
-  <p>
-    <b>Total:</b>
-    <span id="pdfTotal"></span>
-  </p>
-
-  <p>
-    <b>Hadir:</b>
-    <span id="pdfHadir"></span>
-  </p>
-
-  <p>
-    <b>Tidak Hadir:</b>
-    <span id="pdfTidak"></span>
-  </p>
-
-
-  <br>
-
-
-  <table>
-
-    <thead>
-
-      <tr>
-
-        <th>No</th>
-
-        <th>Nama</th>
-
-        <th>Kehadiran</th>
-
-        <th>Tempat</th>
-
-      </tr>
-
-    </thead>
-
-    <tbody id="pdfTable"></tbody>
-
-  </table>
-
-
-  <div
-    style="
-      text-align:right;
-      margin-top:40px;
-    ">
-
-    <p>
-      Grobogan,
-      <span id="tanggalCetak2"></span>
-    </p>
-
-    <br><br><br>
-
-    <p>
-      <b>( Ketua Panitia )</b>
-    </p>
-
-  </div>
-
-</div>
-
-
-
-<script>
-
 /* =====================================================
    KONFIGURASI API
 ===================================================== */
@@ -1929,6 +1931,28 @@ function updateEventURL(id){
 }
 
 
+function fetchWithTimeout(url, timeoutMs){
+  const controller = new AbortController();
+
+  const timer =
+    setTimeout(
+      function(){
+        controller.abort();
+      },
+      timeoutMs
+    );
+
+  return fetch(url, {
+    signal: controller.signal,
+    cache: "no-store"
+  }).finally(
+    function(){
+      clearTimeout(timer);
+    }
+  );
+}
+
+
 /* =====================================================
    LOAD EVENTS
 ===================================================== */
@@ -1947,8 +1971,9 @@ function loadEvents(){
      </option>`;
 
 
-  fetch(
-    API + "?action=events"
+  fetchWithTimeout(
+    API + "?action=events",
+    20000
   )
 
   .then(res => res.json())
@@ -2074,11 +2099,13 @@ function loadEvents(){
 
       select.innerHTML =
         `<option value="">
-           Gagal memuat acara
+           Gagal memuat acara — tekan Refresh
          </option>`;
 
       showError(
-        "Gagal memuat daftar acara."
+        error && error.name === "AbortError"
+          ? "Server tidak merespons dalam 20 detik. Periksa koneksi atau deployment Apps Script."
+          : "Gagal memuat daftar acara."
       );
 
     }
@@ -2281,7 +2308,9 @@ function loadDashboard(idEvent){
   }
 
 
-  showLoading();
+  if(!allData.length){
+    showLoading();
+  }
 
 
   fetch(
@@ -3312,13 +3341,27 @@ function renderChart(
 
 function markLastUpdated(){
   lastUpdatedAt = new Date();
-  const el = document.getElementById("lastUpdated");
-  if(el){
-    el.innerText =
-      "Data terakhir diperbarui: " +
-      lastUpdatedAt.toLocaleTimeString("id-ID", {
-        hour:"2-digit", minute:"2-digit", second:"2-digit"
-      });
+
+  const timeText =
+    lastUpdatedAt.toLocaleTimeString("id-ID", {
+      hour:"2-digit",
+      minute:"2-digit",
+      second:"2-digit"
+    });
+
+  const element =
+    document.getElementById("lastUpdated");
+
+  if(element){
+    element.innerText = timeText;
+  }
+
+  const statusElement =
+    document.getElementById("lastUpdatedText");
+
+  if(statusElement){
+    statusElement.innerText =
+      "Data terakhir diperbarui: " + timeText;
   }
 }
 
