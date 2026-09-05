@@ -1271,7 +1271,7 @@ function setMode(mode){
   else{
 
     description.innerText =
-      "Daftar peserta yang siap digunakan untuk proses absensi.";
+      "Rekap absensi berdasarkan peserta TERDAFTAR dan data pada sheet ABSENSI.";
 
   }
 
@@ -1410,7 +1410,9 @@ function updateModeInterface(){
 
   filter.innerHTML =
     `<option value="">Semua</option>
-     <option value="Hadir">Hadir</option>`;
+     <option value="Hadir">Hadir</option>
+     <option value="Tidak Hadir">Tidak Hadir</option>
+     <option value="Belum Absen">Belum Absen</option>`;
 
   if(exportExcelButton){
 
@@ -1672,26 +1674,22 @@ function loadPendaftaranDashboard(idEvent){
 function loadAbsensiDashboard(idEvent){
 
   if(isLoadingData) return;
+
   isLoadingData = true;
 
-
-  /*
-   * Endpoint ini adalah endpoint yang sudah ada
-   * pada Code.gs saat ini.
-   *
-   * Sumber datanya:
-   * RESPON dengan KEHADIRAN = Hadir.
-   *
-   * Data ini merupakan daftar peserta yang
-   * siap digunakan oleh proses absensi.
-   */
+  if(!allData.length){
+    showLoading();
+  }
 
   fetch(
     API +
-    "?action=peserta_absensi&id_event=" +
+    "?action=absensi_dashboard&id_event=" +
     encodeURIComponent(
       idEvent
-    )
+    ),
+    {
+      cache:"no-store"
+    }
   )
 
   .then(res => res.json())
@@ -1705,76 +1703,117 @@ function loadAbsensiDashboard(idEvent){
 
       throw new Error(
         res?.message ||
-        "Data peserta absensi tidak tersedia."
+        "Dashboard absensi tidak tersedia."
       );
 
     }
 
-
     currentEvent =
-      res.event || currentEvent;
-
-
-    renderEventInfo(
-      currentEvent
-    );
-
+      res.event || null;
 
     allData =
       Array.isArray(res.data)
         ? res.data
         : [];
 
+    renderEventInfo(
+      currentEvent
+    );
+
+    const summary =
+      res.summary || {};
+
+    const total =
+      Number(
+        summary.total ||
+        allData.length ||
+        0
+      );
+
+    const hadir =
+      Number(
+        summary.hadir ||
+        0
+      );
+
+    const tidakHadir =
+      Number(
+        summary.tidak_hadir ||
+        0
+      );
+
+    const belumAbsen =
+      Number(
+        summary.belum_absen ||
+        0
+      );
+
+    const sudahAbsen =
+      hadir +
+      tidakHadir;
+
+    const persen =
+      total > 0
+        ? Number(
+            (
+              sudahAbsen /
+              total
+            ) * 100
+          ).toFixed(2)
+        : 0;
 
     setStatLabel(
       "statLabelTotal",
-      "Peserta"
+      "Total Pendaftar"
     );
 
     setStatLabel(
       "statLabelHadir",
-      "Siap Absensi"
+      "Sudah Absen"
     );
 
     setStatLabel(
       "statLabelTidak",
-      "Status"
+      "Belum Absen"
     );
 
     setStatLabel(
       "statLabelPersen",
-      "Kesiapan"
+      "Persentase Absen"
     );
-
 
     setStatNumber(
       "total",
-      allData.length
+      total
     );
 
     setStatNumber(
       "hadir",
-      allData.length
+      sudahAbsen
     );
 
     setStatNumber(
       "tidak",
-      0
+      belumAbsen
     );
 
     setStatNumber(
       "persen",
-      allData.length > 0
-        ? "100%"
-        : "0%"
+      persen + "%"
     );
-
 
     currentPage = 1;
 
     renderTable();
 
+    renderAbsensiChart(
+      hadir,
+      tidakHadir,
+      belumAbsen
+    );
+
     hideError();
+
     markLastUpdated();
 
   })
@@ -1786,7 +1825,7 @@ function loadAbsensiDashboard(idEvent){
 
       showError(
         error.message ||
-        "Gagal memuat data peserta absensi."
+        "Gagal memuat dashboard absensi."
       );
 
       if(!allData.length){
@@ -1795,6 +1834,7 @@ function loadAbsensiDashboard(idEvent){
 
     }
   )
+
   .finally(function(){
     isLoadingData = false;
   });
@@ -2713,11 +2753,15 @@ function getFilteredData(){
           ? String(
               x.KEHADIRAN || ""
             )
-          : String(
-              x.STATUS_PENDAFTARAN ||
-              x.KEHADIRAN ||
-              ""
-            );
+          : currentMode === "pendaftaran"
+            ? String(
+                x.STATUS_PENDAFTARAN || ""
+              )
+            : String(
+                x.STATUS_ABSENSI ||
+                x.KEHADIRAN ||
+                "Belum Absen"
+              );
 
 
       const cocokNama =
@@ -2979,12 +3023,11 @@ function renderTable(){
 
     document.getElementById(
       "thStatus"
-    ).innerText = "Status";
+    ).innerText = "Status Absensi";
 
     document.getElementById(
       "thTempat"
-    ).innerText = "Waktu Polling";
-
+    ).innerText = "Waktu Absen";
 
     if(
       pageData.length === 0
@@ -2994,7 +3037,7 @@ function renderTable(){
         `<tr>
            <td colspan="4"
                style="text-align:center;">
-             Belum ada peserta siap absensi
+             Data tidak ditemukan
            </td>
          </tr>`;
 
@@ -3002,6 +3045,23 @@ function renderTable(){
 
       pageData.forEach(
         function(d,i){
+
+          const status =
+            String(
+              d.STATUS_ABSENSI ||
+              d.KEHADIRAN ||
+              "Belum Absen"
+            );
+
+          const upper =
+            status.toUpperCase();
+
+          const statusClass =
+            upper === "HADIR"
+              ? "status-hadir"
+              : upper === "TIDAK HADIR"
+                ? "status-tidak"
+                : "";
 
           html +=
             `<tr>
@@ -3016,13 +3076,15 @@ function renderTable(){
                  )}
                </td>
 
-               <td class="status-hadir">
-                 Hadir
+               <td class="${statusClass}">
+                 ${escapeHTML(
+                   status
+                 )}
                </td>
 
                <td>
                  ${escapeHTML(
-                   d.TIMESTAMP || "-"
+                   d.WAKTU_ABSEN || "-"
                  )}
                </td>
 
@@ -3034,7 +3096,6 @@ function renderTable(){
     }
 
   }
-
 
   tbody.innerHTML =
     html;
@@ -3262,6 +3323,57 @@ document.getElementById(
    CHART
 ===================================================== */
 
+function renderAbsensiChart(
+  hadir,
+  tidakHadir,
+  belumAbsen
+){
+
+  const ctx =
+    document.getElementById(
+      "chartKehadiran"
+    );
+
+  if(chart){
+    chart.destroy();
+  }
+
+  chart =
+    new Chart(
+      ctx,
+      {
+        type:"doughnut",
+
+        data:{
+          labels:[
+            "Hadir",
+            "Tidak Hadir",
+            "Belum Absen"
+          ],
+
+          datasets:[{
+            data:[
+              Number(hadir || 0),
+              Number(tidakHadir || 0),
+              Number(belumAbsen || 0)
+            ]
+          }]
+        },
+
+        options:{
+          responsive:true,
+
+          plugins:{
+            legend:{
+              position:"bottom"
+            }
+          }
+        }
+      }
+    );
+}
+
+
 function renderChart(
   hadir,
   tidak
@@ -3435,7 +3547,7 @@ function exportExcel(){
       ? "Tempat"
       : currentMode === "pendaftaran"
         ? "Instansi"
-        : "Waktu Polling";
+        : "Waktu Absen";
 
 
   let html =
@@ -3482,7 +3594,9 @@ function exportExcel(){
           ? d.KEHADIRAN || ""
           : currentMode === "pendaftaran"
             ? d.STATUS_PENDAFTARAN || ""
-            : "Hadir";
+            : d.STATUS_ABSENSI ||
+              d.KEHADIRAN ||
+              "Belum Absen";
 
 
       const third =
@@ -3490,7 +3604,7 @@ function exportExcel(){
           ? d.TEMPAT || ""
           : currentMode === "pendaftaran"
             ? d.INSTANSI || ""
-            : d.TIMESTAMP || "";
+            : d.WAKTU_ABSEN || "";
 
 
       html +=
@@ -3621,7 +3735,7 @@ function exportPDF(){
       ? "LAPORAN POLLING KEHADIRAN"
       : currentMode === "pendaftaran"
         ? "LAPORAN PENDAFTARAN PESERTA"
-        : "LAPORAN PESERTA ABSENSI";
+        : "LAPORAN ABSENSI KEGIATAN";
 
 
   document.getElementById(
@@ -3675,7 +3789,15 @@ function exportPDF(){
                 .toUpperCase() ===
               "TERDAFTAR"
           ).length
-        : filtered.length;
+        : filtered.filter(
+            x =>
+              String(
+                x.STATUS_ABSENSI ||
+                x.KEHADIRAN ||
+                ""
+              ).toUpperCase() ===
+              "HADIR"
+          ).length;
 
 
   const jumlahTidak =
@@ -3685,7 +3807,17 @@ function exportPDF(){
             x.KEHADIRAN ===
             "Tidak Hadir"
         ).length
-      : 0;
+      : currentMode === "absensi"
+        ? filtered.filter(
+            x =>
+              String(
+                x.STATUS_ABSENSI ||
+                x.KEHADIRAN ||
+                ""
+              ).toUpperCase() ===
+              "TIDAK HADIR"
+          ).length
+        : 0;
 
 
   document.getElementById(
@@ -3711,7 +3843,9 @@ function exportPDF(){
           ? d.KEHADIRAN || ""
           : currentMode === "pendaftaran"
             ? d.STATUS_PENDAFTARAN || ""
-            : "Hadir";
+            : d.STATUS_ABSENSI ||
+              d.KEHADIRAN ||
+              "Belum Absen";
 
 
       const third =
@@ -3719,7 +3853,7 @@ function exportPDF(){
           ? d.TEMPAT || ""
           : currentMode === "pendaftaran"
             ? d.INSTANSI || ""
-            : d.TIMESTAMP || "";
+            : d.WAKTU_ABSEN || "";
 
 
       html +=
